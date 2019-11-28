@@ -81,6 +81,11 @@ namespace ToDoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
+            if(todoItem.TaskName == "")
+            {
+                todoItem.TaskName = "Untitled";
+            }
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
