@@ -9,9 +9,11 @@ function getItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
-function addItem() {
+function addItem(newTaskName) {
+
 
     const addNameTextbox = document.getElementById('add-name');
+
 
     const item = {
         taskStatus: "Not Started",
@@ -66,6 +68,7 @@ function taskStatusChange(newStatus, itemId, itemTaskName) {
     })
         .then(() => document.getElementById(`statusDropDown${itemId}`).innerHTML = newStatus)
         .then(() => document.getElementById(`statusIcon${itemId}`).src = `lib/statusIcons/${newStatus}.png`)
+        .then(() => $(`#hiddenTaskStatus${itemId}`).text(`${newStatus}`))
         .catch(error => console.error('Unable to delete item.', error));
 
 }
@@ -79,7 +82,26 @@ function displayTaskInput(itemId) {
 
 function taskNameChange(itemId) {
 
-    var newTaskName = $(`inputNameChange${itemId}`).value
+    var newTaskName = $(`#inputNameChange${itemId}`).val();
+    var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
+
+
+    const item = {
+        id: parseInt(itemId, 10),
+        taskStatus: taskStatus,
+        taskName: newTaskName
+    };
+
+    fetch(`${uri}/${itemId}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        .then(() => displayNewItem())
+        .catch(error => console.error('Unable to delete item.', error));
 
 }
 
@@ -105,6 +127,9 @@ function displayItems(data) {
                               </div>
                             </div>
                             <br>
+                        </div>
+                        <div class="d-none">
+                            <p id="hiddenTaskStatus${item.id}">${item.taskStatus}</p>
                         </div>
                         <div class="dropdown show">
                             <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${item.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

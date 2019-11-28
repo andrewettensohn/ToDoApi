@@ -3,5 +3,7 @@ Figure out how to do a sub task on backend
 create delete function
 
 create edit name function
+	on edit btn click -> 
+	1. Turn task
 
 
