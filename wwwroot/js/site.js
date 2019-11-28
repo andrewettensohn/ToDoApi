@@ -3,13 +3,16 @@ const uri = 'api/TodoItems';
 let todos = [];
 
 function getItems() {
+
+    $("#output").empty();
+
     fetch(uri)
         .then(response => response.json())
         .then(data => displayItems(data))
         .catch(error => console.error('Unable to get items.', error));
 }
 
-function addItem(newTaskName) {
+function addItem() {
 
 
     const addNameTextbox = document.getElementById('add-name');
@@ -29,7 +32,8 @@ function addItem(newTaskName) {
         body: JSON.stringify(item)
     })
         .then(response => response.json())
-        .then(data => displayNewItem())
+        .then(() => getItems())
+        .then(() => $("#add-name").focus())
         .then(() => {
             addNameTextbox.value = '';
         })
@@ -37,17 +41,6 @@ function addItem(newTaskName) {
 
 } 
 
-function displayNewItem() {
-
-
-    $("#output").empty();
-
-    getItems();
-
-    $("#add-name").focus();
-
-
-}
 
 function taskStatusChange(newStatus, itemId, itemTaskName) {
 
@@ -100,7 +93,7 @@ function taskNameChange(itemId) {
         },
         body: JSON.stringify(item)
     })
-        .then(() => displayNewItem())
+        .then(() => getItems())
         .catch(error => console.error('Unable to delete item.', error));
 
 }
@@ -110,7 +103,7 @@ function deleteTask(itemId) {
     fetch(`${uri}/${itemId}`, {
         method: 'DELETE'
     })
-        .then(() => displayNewItem())
+        .then(() => getItems())
         .catch(error => console.error('Unable to delete item.', error));
 
 }
@@ -134,7 +127,6 @@ function displayItems(data) {
                               <div class="input-group-append">
                               </div>
                             </div>
-                            <br>
                         </div>
                         <div class="d-none">
                             <p id="hiddenTaskStatus${item.id}">${item.taskStatus}</p>
@@ -149,16 +141,18 @@ function displayItems(data) {
                                 <a class="dropdown-item" onclick="taskStatusChange('Completed', '${item.id}', '${item.taskName}')" href="#">Completed</a>
                             </div>
                         </div>
-                        <button class="btn text-white float-right" id="btnDeleteTask${item.id}" onclick="deleteTask(${item.id})">
-                            <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                <path d="M2 30 L30 2 M30 30 L2 2" />
-                            </svg>
-                        </button>
-                        <button class="btn text-white float-right" id="btnEditTaskName${item.id}" onclick="displayTaskInput('${item.id}')">
-                            <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
-                            </svg>
-                        </button>
+                        <div>
+                            <button class="btn text-white float-right" id="btnDeleteTask${item.id}" onclick="deleteTask(${item.id})">
+                                <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <path d="M2 30 L30 2 M30 30 L2 2" />
+                                </svg>
+                            </button>
+                            <button class="btn text-white float-right" id="btnEditTaskName${item.id}" onclick="displayTaskInput('${item.id}')">
+                                <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                    <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <div id="taskCollapse${item.id}" class="collapse bg-secondary" aria-labelledby="taskHeading${item.id}" item-parent="#taskAccordion${item.id}">
                         <div id="subAccordion${item.id}">
