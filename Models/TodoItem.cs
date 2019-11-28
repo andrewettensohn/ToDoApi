@@ -1,4 +1,6 @@
-﻿namespace TodoApi.Models
+﻿using ToDoApi.Models;
+
+namespace TodoApi.Models
 {
     public class TodoItem
     {
@@ -7,15 +9,6 @@
         public string TaskStatus { get; set; }
 
         public SubTask subTask { get; set; }
-
-    }
-
-    public class SubTask
-    {
-        public long subId { get; set; }
-        public string subTaskName { get; set; }
-
-        public string subTaskStatus { get; set; }
 
     }
 }
