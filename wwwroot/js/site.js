@@ -105,7 +105,15 @@ function taskNameChange(itemId) {
 
 }
 
+function deleteTask(itemId) {
 
+    fetch(`${uri}/${itemId}`, {
+        method: 'DELETE'
+    })
+        .then(() => displayNewItem())
+        .catch(error => console.error('Unable to delete item.', error));
+
+}
 
 function displayItems(data) {
 
@@ -141,7 +149,7 @@ function displayItems(data) {
                                 <a class="dropdown-item" onclick="taskStatusChange('Completed', '${item.id}', '${item.taskName}')" href="#">Completed</a>
                             </div>
                         </div>
-                        <button class="btn text-white float-right" id="btnDeleteTask${item.id}">
+                        <button class="btn text-white float-right" id="btnDeleteTask${item.id}" onclick="deleteTask(${item.id})">
                             <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M2 30 L30 2 M30 30 L2 2" />
                             </svg>
