@@ -7,10 +7,10 @@ namespace ToDoApi.Models
 {
     public class SubTask
     {
-            public long id { get; set; }
-            public string subTaskName { get; set; }
+            public long Id { get; set; }
+            public string SubTaskName { get; set; }
 
-            public string subTaskStatus { get; set; }
+            public string SubTaskStatus { get; set; }
 
     }
 }

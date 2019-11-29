@@ -52,6 +52,11 @@ namespace ToDoApi.Controllers
                 return BadRequest();
             }
 
+            if (todoItem.TaskName == "" || todoItem.TaskName is null)
+            {
+                todoItem.TaskName = "Untitled";
+            }
+
             _context.Entry(todoItem).State = EntityState.Modified;
 
             try
@@ -81,7 +86,7 @@ namespace ToDoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
-            if(todoItem.TaskName == "")
+            if(todoItem.TaskName == "" || todoItem.TaskName is null)
             {
                 todoItem.TaskName = "Untitled";
             }

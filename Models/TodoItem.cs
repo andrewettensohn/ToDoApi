@@ -8,7 +8,7 @@ namespace TodoApi.Models
         public string TaskName { get; set; }
         public string TaskStatus { get; set; }
 
-        public SubTask subTask { get; set; }
+        public SubTask SubTask { get; set; }
 
     }
 }
