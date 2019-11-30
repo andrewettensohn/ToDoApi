@@ -9,5 +9,7 @@ namespace TodoApi.Models
 
         public string TaskStatus { get; set; }
 
+        public TodoSubItem TodoSubItem { get; set; }
+
     }
 }

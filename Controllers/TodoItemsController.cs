@@ -31,6 +31,7 @@ namespace ToDoApi.Controllers
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
+
             if (todoItem == null)
             {
                 return NotFound();
@@ -39,9 +40,25 @@ namespace ToDoApi.Controllers
             return todoItem;
         }
 
+        // GET: api/TodoItems/5/1
+        [HttpGet("{todoItemID}/{todoSubItemID}")]
+        public async Task<ActionResult<TodoItem>> GetTodoItemAndSubItems(int todoItemID, int todoSubItemID)
+        {
+            var todoItem = await _context.TodoItems.FindAsync(todoItemID);
+
+            var todoSubItem = await _context.TodoSubItems.FindAsync(todoSubItemID);
+
+            todoItem.TodoSubItem = todoSubItem;
+
+            if (todoItem == null || todoSubItem == null)
+            {
+                return NotFound();
+            }
+
+            return todoItem;
+        }
+
         // PUT: api/TodoItems/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodoItem(int id, TodoItem todoItem)
         {
@@ -76,10 +93,6 @@ namespace ToDoApi.Controllers
             return NoContent();
         }
 
-        // POST: api/TodoItems
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
         // POST: api/TodoItems
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
