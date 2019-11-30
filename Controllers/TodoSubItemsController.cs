@@ -45,8 +45,33 @@ namespace ToDoApi.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> PutTodoSubItem(int id, TodoSubItem todoSubItem)
         {
+
+            if(id != todoSubItem.TodoSubItemID)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(todoSubItem).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoSubItemExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // POST api/<controller>
@@ -61,13 +86,24 @@ namespace ToDoApi.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult<TodoSubItem>> DeleteTodoSubItem(int id)
         {
+            var todoSubItem = await _context.TodoSubItems.FindAsync(id);
+            if(todoSubItem == null)
+            {
+                return NotFound();
+            }
+
+            _context.TodoSubItems.Remove(todoSubItem);
+            await _context.SaveChangesAsync();
+
+            return todoSubItem;
+
         }
 
-        //private bool TodoSubItemExists(int id)
-        //{
-        //    return _context.TodoItems.Any(e => e.TodoSubItemID == id);
-        //}
+        private bool TodoSubItemExists(int id)
+        {
+            return _context.TodoSubItems.Any(e => e.TodoSubItemID == id);
+        }
     }
 }
