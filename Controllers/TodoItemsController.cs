@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
@@ -29,7 +27,7 @@ namespace ToDoApi.Controllers
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
+        public async Task<ActionResult<TodoItem>> GetTodoItem(int id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
@@ -45,9 +43,9 @@ namespace ToDoApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
+        public async Task<IActionResult> PutTodoItem(int id, TodoItem todoItem)
         {
-            if (id != todoItem.Id)
+            if (id != todoItem.TodoItemID)
             {
                 return BadRequest();
             }
@@ -95,12 +93,12 @@ namespace ToDoApi.Controllers
             await _context.SaveChangesAsync();
 
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.TodoItemID }, todoItem);
         }
 
         // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoItem>> DeleteTodoItem(long id)
+        public async Task<ActionResult<TodoItem>> DeleteTodoItem(int id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
             if (todoItem == null)
@@ -114,9 +112,9 @@ namespace ToDoApi.Controllers
             return todoItem;
         }
 
-        private bool TodoItemExists(long id)
+        private bool TodoItemExists(int id)
         {
-            return _context.TodoItems.Any(e => e.Id == id);
+            return _context.TodoItems.Any(e => e.TodoItemID == id);
         }
     }
 }
