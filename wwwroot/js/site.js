@@ -21,9 +21,7 @@ function displayTaskInput(itemId) {
 
 function addItem() {
 
-
     const addNameTextbox = document.getElementById('add-name');
-
 
     const item = {
         taskStatus: "Not Started",
@@ -72,7 +70,6 @@ function taskStatusChange(newStatus, itemId, itemTaskName) {
         .catch(error => console.error('Unable to delete item.', error));
 
 }
-
 
 function taskNameChange(itemId) {
 
@@ -186,33 +183,52 @@ function displayItems(data) {
                 //the first line of this html is jacked up
                 var subTaskHTML = `
 
-                <div id="subAccordion${subItem.todoSubItemID}">
-                    <div class="card bg-dark">
-                        <div class="card-header" id="subHeading${subItem.todoSubItemID}">
-                            <img class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
-                            <h5 class="mb-0 float-left">
-                                <button class="btn text-white" data-toggle="collapse" id="subTaskNameHeader${subItem.todoSubItemID}" data-target="#subCollapse${subItem.todoSubItemID}" aria-expanded="false" aria-controls="subCollapse${subItem.todoSubItemID}">
-                                    ${subItem.subTaskName}
-                                </button>
-                            </h5>
-                            <div class="dropdown show">
-                                <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="subStatusDropDown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    In-Progress
-                                </a>
-
-                                <div class="dropdown-menu" aria-labelledby="subStatusDropDown1">
-                                    <a class="dropdown-item" href="#">Not Started</a>
-                                    <a class="dropdown-item" href="#">In-Progress</a>
-                                    <a class="dropdown-item" href="#">Completed</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" aria-labelledby="subHeading1" data-parent="#subAccordion${subItem.todoSubItemID}">
-                            <br />
-                            <p>Using Bootstrap accordions as an alternative to tables.</p>
+       <div id="subAccordion${subItem.todoSubItemID}">
+        <div class="card bg-dark">
+            <div class="card-header" id="subHeading${subItem.todoSubItemID}">
+                <img class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
+                <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
+                    <button class="btn text-white" id="btnTaskDropDown${subItem.todoSubItemID}" data-toggle="collapse" data-target="#subCollapse${subItem.todoSubItemID}" aria-expanded="false">
+                        <h5 id="taskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</h5>
+                    </button>
+                    <div class="input-group mb-3 d-none" id="areaInputNameChange${subItem.todoSubItemID}">
+                        <input id="inputNameChange${subItem.todoSubItemID}" onfocusout="taskNameChange('${subItem.todoSubItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
                         </div>
                     </div>
                 </div>
+                <div class="d-none">
+                    <p id="hiddenTaskStatus${subItem.todoSubItemID}">${subItem.taskStatus}</p>
+                </div>
+                <div class="dropdown show">
+                    <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${subItem.todoSubItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        ${subItem.subTaskStatus}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="statusDropDown${subItem.todoSubItemID}">
+                        <a class="dropdown-item" onclick="taskStatusChange('Not Started', '${subItem.todoSubItemID}', '${subItem.subTaskName}')" href="#">Not Started</a>
+                        <a class="dropdown-item" onclick="taskStatusChange('In-Progress', '${subItem.todoSubItemID}', '${subItem.subTaskName}')" href="#">In-Progress</a>
+                        <a class="dropdown-item" onclick="taskStatusChange('Completed', '${subItem.todoSubItemID}', '${subItem.subTaskName}')" href="#">Completed</a>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn text-white float-right" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${subItem.todoSubItemID})">
+                        <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M2 30 L30 2 M30 30 L2 2" />
+                        </svg>
+                    </button>
+                    <button class="btn text-white float-right" id="btnEditTaskName${subItem.todoSubItemID}" onclick="displayTaskInput('${subItem.todoSubItemID}')">
+                        <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" data-parent="#subAccordion${subItem.todoSubItemID}">
+                <br />
+                <p>Using Bootstrap accordions as an alternative to tables.</p>
+            </div>
+        </div>
+    </div>
                 
                 `;
 
