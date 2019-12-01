@@ -54,6 +54,9 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
 
         var uriType = uri2;
         var idToSend = subItemId;
+        var dropDownElement = `subStatusDropDown${subItemId}`;
+        var statusIconElement = `subStatusIcon${subItemId}`;
+        var hiddenStatusElement = `subHiddenTaskStatus${subItemId}`;
 
         var item = {
             todoSubItemID: parseInt(subItemId, 10),
@@ -66,6 +69,9 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
 
         var uriType = uri;
         var idToSend = itemId;
+        var dropDownElement = `statusDropDown${itemId}`;
+        var statusIconElement = `statusIcon${itemId}`;
+        var hiddenStatusElement = `hiddenTaskStatus${itemId}`;
 
         var item = {
             todoItemID: parseInt(itemId, 10),
@@ -75,7 +81,6 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
 
     }
 
-    console.log("Making Call...")
     fetch(`${uriType}/${idToSend}`, {
         method: 'PUT',
         headers: {
@@ -84,7 +89,9 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
         },
         body: JSON.stringify(item)
     })
-        .then(() => getItems())
+        .then(() => $(`#${dropDownElement}`).html(newStatus))
+        .then(() => $(`#${statusIconElement}`).attr("src", `lib/statusIcons/${newStatus}.png`))
+        .then(() => $(`#${hiddenStatusElement}`).text(`${newStatus}`))
         .catch(error => console.error('Unable to delete item.', error));
 
 }
@@ -201,7 +208,7 @@ function displayItems(data) {
                    <div id="subAccordion${subItem.todoSubItemID}">
                     <div class="card bg-dark">
                         <div class="card-header" id="subHeading${subItem.todoSubItemID}">
-                            <img class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
+                            <img id="subStatusIcon${subItem.todoSubItemID}" class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
                             <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
                                 <button class="btn text-white" id="btnTaskDropDown${subItem.todoSubItemID}" data-toggle="collapse" data-target="#subCollapse${subItem.todoSubItemID}" aria-expanded="false">
                                     <h6 id="taskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</h6>
@@ -213,10 +220,10 @@ function displayItems(data) {
                                 </div>
                             </div>
                             <div class="d-none">
-                                <p id="hiddenTaskStatus${subItem.todoSubItemID}">${subItem.taskStatus}</p>
+                                <p id="subHiddenTaskStatus${subItem.todoSubItemID}">${subItem.taskStatus}</p>
                             </div>
                             <div class="dropdown show">
-                                <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${subItem.todoSubItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="subStatusDropDown${subItem.todoSubItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     ${subItem.subTaskStatus}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="statusDropDown${subItem.todoSubItemID}">
