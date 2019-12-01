@@ -121,39 +121,65 @@ function taskNameChange(itemId) {
 
 }
 
-function deleteTask(itemId) {
+function deleteTask(itemId, subItemId, isSubTask) {
 
-    fetch(`${uri}/${itemId}`, {
-        method: 'DELETE'
-    })
-        .then(() => getItems())
-        .catch(error => console.error('Unable to delete item.', error));
+    console.log(isSubTask)
+
+    if (isSubTask == true) {
+
+        fetch(`${uri2}/${itemId}/${subItemId}`, {
+            method: 'DELETE'
+        })
+            .then(() => getItems())
+            .catch(error => console.error('Unable to delete item.', error));
+
+    }
+    else if (isSubTask == false) {
+
+        fetch(`${uri}/${itemId}`, {
+            method: 'DELETE'
+        })
+            .then(() => getItems())
+            .catch(error => console.error('Unable to delete item.', error));
+    }
+}
+
+function toggleCollapse(itemId) {
+
+
+
+    $(`#taskCollapse${itemId}`).collapse('toggle');
+
 
 }
 
 function displayItems(data) {
 
     var accordionBtnState = "active";
+    var cheveronHide = "";
 
 
     data.forEach(item => {
 
 
-        if (item.todoSubItems == null)
-        {
+        if (item.todoSubItems == null) {
+
             accordionBtnState = "disabled";
+            cheveronHide = "d-none";
+
         }
 
             var taskHTML = `
 
               <div id="taskAccordion${item.todoItemID}">
                 <div id="taskCard${item.todoItemID}" class="card bg-dark">
+                    <svg class="${cheveronHide}" onclick="toggleCollapse('${item.todoItemID}')" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <path d="M30 12 L16 24 2 12" />
+                    </svg>
                     <div class="card-header" id="taskHeading${item.todoItemID}">
                         <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
                         <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
-                            <button class="btn text-white" id="btnTaskDropDown${item.todoItemID}" data-toggle="collapse" data-target="#taskCollapse${item.todoItemID}" aria-expanded="false" aria-controls="taskCollapse${item.todoItemID}" ${accordionBtnState}>
-                                <h4 id="taskNameHeader${item.todoItemID}">${item.taskName}</h4>
-                            </button>
+                                <h4 class="mx-3 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h4>
                             <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
                                 <input id="inputNameChange${item.todoItemID}" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
@@ -167,14 +193,14 @@ function displayItems(data) {
                             <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${item.todoItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 ${item.taskStatus}
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="statusDropDown${item.todoItemID}">
+                            <div class="dropdown-menu ml-3 mt-1" aria-labelledby="statusDropDown${item.todoItemID}">
                                 <a class="dropdown-item" onclick="taskStatusChange('Not Started', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Not Started</a>
                                 <a class="dropdown-item" onclick="taskStatusChange('In-Progress', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">In-Progress</a>
                                 <a class="dropdown-item" onclick="taskStatusChange('Completed', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Completed</a>
                             </div>
                         </div>
                         <div>
-                            <button class="btn text-white float-right" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID})">
+                            <button class="btn text-white float-right" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID}, 'N/A', false)">
                                 <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                     <path d="M2 30 L30 2 M30 30 L2 2" />
                                 </svg>
@@ -211,7 +237,7 @@ function displayItems(data) {
                             <img id="subStatusIcon${subItem.todoSubItemID}" class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
                             <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
                                 <button class="btn text-white" id="btnTaskDropDown${subItem.todoSubItemID}" data-toggle="collapse" data-target="#subCollapse${subItem.todoSubItemID}" aria-expanded="false">
-                                    <h6 id="taskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</h6>
+                                    <p id="taskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</p>
                                 </button>
                                 <div class="input-group mb-3 d-none" id="areaInputNameChange${subItem.todoSubItemID}">
                                     <input id="inputNameChange${subItem.todoSubItemID}" onfocusout="taskNameChange('${subItem.todoSubItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
@@ -233,12 +259,12 @@ function displayItems(data) {
                                 </div>
                             </div>
                             <div>
-                                <button class="btn text-white float-right" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${subItem.todoSubItemID})">
+                                <button class="btn text-white float-right" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.subItemId}, true)">
                                     <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                         <path d="M2 30 L30 2 M30 30 L2 2" />
                                     </svg>
                                 </button>
-                                <button class="btn text-white float-right" id="btnEditTaskName${subItem.todoSubItemID}" onclick="displayTaskInput('${subItem.todoSubItemID}')">
+                                <button class="btn text-white float-right" id="btnEditTaskName${subItem.todoSubItemID}" onclick="displayTaskInput()">
                                     <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                         <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
                                     </svg>
