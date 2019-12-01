@@ -168,7 +168,7 @@ function displayItems(data) {
             cheveronHide = "d-none";
 
         }
-
+        //
             var taskHTML = `
 
               <div id="taskAccordion${item.todoItemID}">
