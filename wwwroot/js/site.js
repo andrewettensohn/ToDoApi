@@ -1,14 +1,22 @@
 ﻿const uri = 'api/TodoItems';
+const uri1 = 'api/TodoItems/Tasks';
 let todos = [];
 
 function getItems() {
 
     $("#output").empty();
 
-    fetch(uri)
+    fetch(uri1)
         .then(response => response.json())
         .then(data => displayItems(data))
         .catch(error => console.error('Unable to get items.', error));
+}
+
+function displayTaskInput(itemId) {
+
+    $(`#btnTaskDropDown${itemId}`).addClass('d-none');
+    $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
+    $(`#inputNameChange${itemId}`).focus();
 }
 
 function addItem() {
@@ -103,23 +111,31 @@ function deleteTask(itemId) {
 
 function displayItems(data) {
 
+    var accordionBtnState = "active";
+
+
     data.forEach(item => {
-        console.log(item.todoItemID)
+
+
+        if (item.todoSubItems == "undefined" || item.todoSubItems == null)
+        {
+            accordionBtnState = "disabled";
+        }
 
             var taskHTML = `
 
-                <div id="taskAccordion${item.todoItemID}">
-                <div class="card bg-dark">
+              <div id="taskAccordion${item.todoItemID}">
+                <div id="taskCard${item.todoItemID}" class="card bg-dark">
                     <div class="card-header" id="taskHeading${item.todoItemID}">
                         <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
                         <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
-                            <button class="btn text-white" id="btnTaskDropDown${item.todoItemID}" data-toggle="collapse" data-target="#taskCollapse${item.todoItemID}" aria-expanded="false" aria-controls="taskCollapse${item.todoItemID}">
+                            <button class="btn text-white" id="btnTaskDropDown${item.todoItemID}" data-toggle="collapse" data-target="#taskCollapse${item.todoItemID}" aria-expanded="false" aria-controls="taskCollapse${item.todoItemID}" ${accordionBtnState}>
                                 <h5 id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
                             </button>
                             <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
-                              <input id="inputNameChange${item.todoItemID}" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
-                              <div class="input-group-append">
-                              </div>
+                                <input id="inputNameChange${item.todoItemID}" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                </div>
                             </div>
                         </div>
                         <div class="d-none">
@@ -148,42 +164,65 @@ function displayItems(data) {
                             </button>
                         </div>
                     </div>
-                    <div id="taskCollapse${item.todoItemID}" class="collapse bg-secondary" aria-labelledby="taskHeading${item.todoItemID}" item-parent="#taskAccordion${item.todoItemID}">
-                        <div id="subAccordion${item.todoItemID}">
-                            <div class="card bg-dark">
-                                <div class="card-header" id="subHeading${item.todoItemID}">
-                                    <img class="float-left" height="40" width="8" src="lib/statusIcons/iconNotStarted.png" />
-                                    <h5 class="mb-0 float-left">
-                                        <button class="btn text-white" data-toggle="collapse" id="subTaskNameHeader${item.todoItemID}" data-target="#subCollapse${item.todoItemID}" aria-expanded="false" aria-controls="subCollapse${item.todoItemID}">
-                                            ${item.taskName}
-                                        </button>
-                                    </h5>
-                                    <div class="dropdown show">
-                                        <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="subStatusDropDown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            In-Progress
-                                        </a>
-
-                                        <div class="dropdown-menu" aria-labelledby="subStatusDropDown1">
-                                            <a class="dropdown-item" href="#">Not Started</a>
-                                            <a class="dropdown-item" href="#">In-Progress</a>
-                                            <a class="dropdown-item" href="#">Completed</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="subCollapse${item.todoItemID}" class="collapse bg-dark" aria-labelledby="subHeading1" data-parent="#subAccordion${item.todoItemID}">
-                                    <br />
-                                    <p>Using Bootstrap accordions as an alternative to tables.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="taskCollapse${item.todoItemID}" class="collapse bg-secondary" aria-labelledby="taskHeading${item.todoItemID}" item-parent="#taskAccordion${item.todoItemID}">
+                
+                </div>
                 </div>
             </div>
             `;
 
-            var newDiv = document.createElement('div');
-            newDiv.innerHTML = taskHTML;
-            document.getElementById("output").appendChild(newDiv);
+        var newDiv = document.createElement('div');
+        newDiv.innerHTML = taskHTML;
+        document.getElementById("output").appendChild(newDiv);
+
+
+
+        if (item.todoSubItems != "undefined" || item.todoSubItems != null) {
+
+            item.todoSubItems.forEach(subItem => {
+
+                console.log(item.todoItemID);
+                console.log(subItem);
+                //the first line of this html is jacked up
+                var subTaskHTML = `
+
+                <div id="subAccordion${subItem.todoSubItemID}">
+                    <div class="card bg-dark">
+                        <div class="card-header" id="subHeading${subItem.todoSubItemID}">
+                            <img class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
+                            <h5 class="mb-0 float-left">
+                                <button class="btn text-white" data-toggle="collapse" id="subTaskNameHeader${subItem.todoSubItemID}" data-target="#subCollapse${subItem.todoSubItemID}" aria-expanded="false" aria-controls="subCollapse${subItem.todoSubItemID}">
+                                    ${subItem.subTaskName}
+                                </button>
+                            </h5>
+                            <div class="dropdown show">
+                                <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="subStatusDropDown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    In-Progress
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="subStatusDropDown1">
+                                    <a class="dropdown-item" href="#">Not Started</a>
+                                    <a class="dropdown-item" href="#">In-Progress</a>
+                                    <a class="dropdown-item" href="#">Completed</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" aria-labelledby="subHeading1" data-parent="#subAccordion${subItem.todoSubItemID}">
+                            <br />
+                            <p>Using Bootstrap accordions as an alternative to tables.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                `;
+
+                var newDiv = document.createElement('div');
+                newDiv.innerHTML = subTaskHTML;
+                document.getElementById(`taskCollapse${item.todoItemID}`).appendChild(newDiv);
+
+            });
+        }
+
     });
 
     todos = data;
