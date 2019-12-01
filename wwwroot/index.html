@@ -6,16 +6,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/site.css" />
     <style>
-        p.sansserif {
-            font-family: Arial, Helvetica, sans-serif;
-        }
 
-        body {background-color: #1b1e21;}
+        body {background-color: #1b1e21; font-family: Helvetica;}
 
     </style>
 </head>
 <body class="text-light">
-    <div class="container-fluid">
+    <div class="container">
         
         <div>
             <br />
@@ -36,9 +33,9 @@
                         <div class="collapse multi-collapse" id="multiCollapseCreateNewTask">
                             <div class="card card-body bg-dark">
                                 <form action="javascript:void(0);" method="POST" onsubmit="addItem()" class="input-group mb-3">
-                                    <input autocomplete="off" maxlength="27" type="text" class="form-control" placeholder="New To-Do" id="add-name">
+                                    <input autocomplete="off" maxlength="27" type="text" class="form-control" placeholder="New Task Name" id="add-name">
                                     <div class="input-group-append">
-                                        <button type="submit" value="Add" class="btn btn-outline-secondary text-white">Add</button>
+                                        <button type="submit" value="Add" class="btn btn-outline-secondary text-white">Add Task</button>
                                     </div>
                                 </form>
                             </div>
