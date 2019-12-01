@@ -1,5 +1,4 @@
-﻿const uri1 = 'weatherforecast';
-const uri = 'api/TodoItems';
+﻿const uri = 'api/TodoItems';
 let todos = [];
 
 function getItems() {
@@ -66,12 +65,6 @@ function taskStatusChange(newStatus, itemId, itemTaskName) {
 
 }
 
-function displayTaskInput(itemId) {
-
-    $(`#btnTaskDropDown${itemId}`).addClass('d-none');
-    $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
-    $(`#inputNameChange${itemId}`).focus();
-}
 
 function taskNameChange(itemId) {
 

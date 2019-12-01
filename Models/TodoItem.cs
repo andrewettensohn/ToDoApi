@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace TodoApi.Models
 {
     public class TodoItem
@@ -9,7 +11,7 @@ namespace TodoApi.Models
 
         public string TaskStatus { get; set; }
 
-        public TodoSubItem TodoSubItem { get; set; }
+        public List<TodoSubItem> TodoSubItems { get; set; }
 
     }
 }

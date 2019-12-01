@@ -40,15 +40,24 @@ namespace ToDoApi.Controllers
             return todoItem;
         }
 
-        // GET: api/TodoItems/5/1
+        // GET: api/TodoItems/Tasks
+        [HttpGet("Tasks")]
+        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItemAndSubItems()
+        {
+            var todoItems = await _context.TodoItems.ToListAsync();
+
+            await _context.TodoSubItems.ToListAsync();
+
+            return todoItems;
+        }
+
+        // GET: api/TodoItems/1/2
         [HttpGet("{todoItemID}/{todoSubItemID}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItemAndSubItems(int todoItemID, int todoSubItemID)
+        public async Task<ActionResult<TodoItem>> GetTodoItemAndSubItem(int todoItemID, int todoSubItemID)
         {
             var todoItem = await _context.TodoItems.FindAsync(todoItemID);
 
             var todoSubItem = await _context.TodoSubItems.FindAsync(todoSubItemID);
-
-            todoItem.TodoSubItem = todoSubItem;
 
             if (todoItem == null || todoSubItem == null)
             {
