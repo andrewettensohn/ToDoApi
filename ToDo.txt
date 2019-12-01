@@ -33,3 +33,6 @@ Figure out how to do a sub task on backend
                         </div>
                     </div>
                 </div>
+
+
+				newStatus, itemId, subItemId, itemTaskName, isSubTask
