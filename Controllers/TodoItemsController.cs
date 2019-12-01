@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
@@ -29,9 +27,10 @@ namespace ToDoApi.Controllers
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
+        public async Task<ActionResult<TodoItem>> GetTodoItem(int id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
+
 
             if (todoItem == null)
             {
@@ -41,15 +40,45 @@ namespace ToDoApi.Controllers
             return todoItem;
         }
 
-        // PUT: api/TodoItems/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
+        // GET: api/TodoItems/Tasks
+        [HttpGet("Tasks")]
+        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItemAndSubItems()
         {
-            if (id != todoItem.Id)
+            var todoItems = await _context.TodoItems.ToListAsync();
+
+            await _context.TodoSubItems.ToListAsync();
+
+            return todoItems;
+        }
+
+        // GET: api/TodoItems/1/2
+        [HttpGet("{todoItemID}/{todoSubItemID}")]
+        public async Task<ActionResult<TodoItem>> GetTodoItemAndSubItem(int todoItemID, int todoSubItemID)
+        {
+            var todoItem = await _context.TodoItems.FindAsync(todoItemID);
+
+            var todoSubItem = await _context.TodoSubItems.FindAsync(todoSubItemID);
+
+            if (todoItem == null || todoSubItem == null)
+            {
+                return NotFound();
+            }
+
+            return todoItem;
+        }
+
+        // PUT: api/TodoItems/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTodoItem(int id, TodoItem todoItem)
+        {
+            if (id != todoItem.TodoItemID)
             {
                 return BadRequest();
+            }
+
+            if (todoItem.TaskName == "" || todoItem.TaskName is null)
+            {
+                todoItem.TaskName = "Untitled";
             }
 
             _context.Entry(todoItem).State = EntityState.Modified;
@@ -74,23 +103,24 @@ namespace ToDoApi.Controllers
         }
 
         // POST: api/TodoItems
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        // POST: api/TodoItems
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
+            if(todoItem.TaskName == "" || todoItem.TaskName is null)
+            {
+                todoItem.TaskName = "Untitled";
+            }
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.TodoItemID }, todoItem);
         }
 
         // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoItem>> DeleteTodoItem(long id)
+        public async Task<ActionResult<TodoItem>> DeleteTodoItem(int id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
             if (todoItem == null)
@@ -104,9 +134,9 @@ namespace ToDoApi.Controllers
             return todoItem;
         }
 
-        private bool TodoItemExists(long id)
+        private bool TodoItemExists(int id)
         {
-            return _context.TodoItems.Any(e => e.Id == id);
+            return _context.TodoItems.Any(e => e.TodoItemID == id);
         }
     }
 }

@@ -1,16 +1,17 @@
-﻿namespace TodoApi.Models
+﻿
+using System.Collections.Generic;
+
+namespace TodoApi.Models
 {
     public class TodoItem
     {
-        public long Id { get; set; }
+        public int TodoItemID { get; set; }
+
         public string TaskName { get; set; }
+
         public string TaskStatus { get; set; }
 
-    }
-
-    public class subTask
-    {
-        
+        public List<TodoSubItem> TodoSubItems { get; set; }
 
     }
 }
