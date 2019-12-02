@@ -40,7 +40,6 @@ function addItem() {
 
 } 
 
-
 function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask) {
 
     if (isSubTask == true) {
@@ -93,6 +92,12 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
     if (isSubTask == true) {
 
+        var newTaskName = $(`#subInputNameChange${subItemId}`).val();
+        var taskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
+
+        var uriType = uri2;
+        var idToSend = subItemId;
+
 
         var item = {
             todoSubItemID: parseInt(subItemId, 10),
@@ -101,12 +106,15 @@ function taskNameChange(itemId, subItemId, isSubTask) {
             subTaskName: newTaskName
         };
 
-
+        console.log(item)
 
     } else if (isSubTask == false) {
 
         var newTaskName = $(`#inputNameChange${itemId}`).val();
         var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
+
+        var uriType = uri;
+        var idToSend = itemId;
 
         var item = {
             todoItemID: parseInt(itemId, 10),
@@ -116,7 +124,7 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
     }
 
-    fetch(`${uri}/${itemId}`, {
+    fetch(`${uriType}/${idToSend}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
@@ -129,11 +137,21 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
 }
 
-function displayTaskInput(itemId) {
+function displayTaskInput(itemId, subItemId, isSubTask) {
 
-    $(`#taskNameHeader${itemId}`).addClass('d-none');
-    $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
-    $(`#inputNameChange${itemId}`).focus();
+    if (isSubTask == true) {
+
+        $(`#subTaskNameHeader${subItemId}`).addClass('d-none');
+        $(`#subAreaInputNameChange${subItemId}`).toggleClass('d-none');
+        $(`#subInputNameChange${subItemId}`).focus();
+
+    } else if (isSubTask == false) {
+
+        $(`#taskNameHeader${itemId}`).addClass('d-none');
+        $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
+        $(`#inputNameChange${itemId}`).focus();
+
+    }
 }
 
 function deleteTask(itemId, subItemId, isSubTask) {
@@ -184,7 +202,6 @@ function displayItems(data) {
             cheveronHide = "d-none";
 
         }
-        //
             var taskHTML = `
 
               <div id="taskAccordion${item.todoItemID}">
@@ -195,7 +212,7 @@ function displayItems(data) {
                     <div class="card-header" id="taskHeading${item.todoItemID}">
                         <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
                         <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
-                            <h5 onclick="displayTaskInput('${item.todoItemID}')" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
+                            <h5 onclick="displayTaskInput('${item.todoItemID}', 'N/A', false)" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
                         <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
                                 <input id="inputNameChange${item.todoItemID}" maxlength="25" onfocusout="taskNameChange('${item.todoItemID}', 'N/A', false)" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
@@ -235,8 +252,6 @@ function displayItems(data) {
         newDiv.innerHTML = taskHTML;
         document.getElementById("output").appendChild(newDiv);
 
-
-
         if (item.todoSubItems != null) {
 
             item.todoSubItems.forEach(subItem => {
@@ -251,15 +266,15 @@ function displayItems(data) {
                         <div class="card-header" id="subHeading${subItem.todoSubItemID}">
                             <img id="subStatusIcon${subItem.todoSubItemID}" class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
                             <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
-                                <p class="font-weight-light mx-2 mt-1" onclick="displayTaskInput() id="subTaskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</p>
+                                <p onclick="displayTaskInput('${item.todoItemID}', '${subItem.todoSubItemID}', true)" class="font-weight-light mx-2 mt-1" id="subTaskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</p>
                             <div class="input-group mb-3 d-none" id="subAreaInputNameChange${subItem.todoSubItemID}">
-                                    <input id="subInputNameChange${subItem.todoSubItemID}" onfocusout="taskNameChange('${subItem.todoSubItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                                    <input id="subInputNameChange${subItem.todoSubItemID}" onfocusout="taskNameChange('${item.todoItemID}','${subItem.todoSubItemID}', true)" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
                                     <div class="input-group-append">
                                     </div>
                                 </div>
                             </div>
                             <div class="d-none">
-                                <p id="subHiddenTaskStatus${subItem.todoSubItemID}">${subItem.taskStatus}</p>
+                                <p id="subHiddenTaskStatus${subItem.todoSubItemID}">${subItem.subTaskStatus}</p>
                             </div>
                             <div class="dropdown show">
                                 <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="subStatusDropDown${subItem.todoSubItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
