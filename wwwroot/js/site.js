@@ -13,13 +13,6 @@ function getItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
-function displayTaskInput(itemId) {
-
-    $(`#btnTaskDropDown${itemId}`).addClass('d-none');
-    $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
-    $(`#inputNameChange${itemId}`).focus();
-}
-
 function addItem() {
 
     const addNameTextbox = document.getElementById('add-name');
@@ -121,6 +114,15 @@ function taskNameChange(itemId) {
 
 }
 
+function displayTaskInput(itemId) {
+
+    console.log("Doing")
+
+    $(`#taskNameHeader${itemId}`).addClass('d-none');
+    $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
+    $(`#inputNameChange${itemId}`).focus();
+}
+
 function deleteTask(itemId, subItemId, isSubTask) {
 
     console.log(isSubTask)
@@ -144,18 +146,22 @@ function deleteTask(itemId, subItemId, isSubTask) {
     }
 }
 
-function toggleCollapse(itemId) {
+function toggleCollapse(itemId, isSubTask) {
 
+    if (isSubTask == true) {
 
+        $(`#subCollapse${itemId}`).collapse('toggle');
 
-    $(`#taskCollapse${itemId}`).collapse('toggle');
+    }
+    else if (isSubTask == false) {
 
+        $(`#taskCollapse${itemId}`).collapse('toggle');
+    }
 
 }
 
 function displayItems(data) {
 
-    var accordionBtnState = "active";
     var cheveronHide = "";
 
 
@@ -164,7 +170,6 @@ function displayItems(data) {
 
         if (item.todoSubItems == null) {
 
-            accordionBtnState = "disabled";
             cheveronHide = "d-none";
 
         }
@@ -173,15 +178,15 @@ function displayItems(data) {
 
               <div id="taskAccordion${item.todoItemID}">
                 <div id="taskCard${item.todoItemID}" class="card bg-dark">
-                    <svg class="${cheveronHide}" onclick="toggleCollapse('${item.todoItemID}')" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <svg class="${cheveronHide}" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                         <path d="M30 12 L16 24 2 12" />
                     </svg>
                     <div class="card-header" id="taskHeading${item.todoItemID}">
                         <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
                         <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
-                                <h4 class="mx-3 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h4>
-                            <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
-                                <input id="inputNameChange${item.todoItemID}" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                            <h5 onclick="displayTaskInput('${item.todoItemID}')" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
+                        <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
+                                <input id="inputNameChange${item.todoItemID}" maxlength="27" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                 </div>
                             </div>
@@ -203,11 +208,6 @@ function displayItems(data) {
                             <button class="btn text-white float-right" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID}, 'N/A', false)">
                                 <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                     <path d="M2 30 L30 2 M30 30 L2 2" />
-                                </svg>
-                            </button>
-                            <button class="btn text-white float-right" id="btnEditTaskName${item.todoItemID}" onclick="displayTaskInput('${item.todoItemID}')">
-                                <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                    <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
                                 </svg>
                             </button>
                         </div>
@@ -233,14 +233,15 @@ function displayItems(data) {
 
                    <div id="subAccordion${subItem.todoSubItemID}">
                     <div class="card bg-dark">
+                        <svg class="${cheveronHide}" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M30 12 L16 24 2 12" />
+                        </svg>
                         <div class="card-header" id="subHeading${subItem.todoSubItemID}">
                             <img id="subStatusIcon${subItem.todoSubItemID}" class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
                             <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
-                                <button class="btn text-white" id="btnTaskDropDown${subItem.todoSubItemID}" data-toggle="collapse" data-target="#subCollapse${subItem.todoSubItemID}" aria-expanded="false">
-                                    <p id="taskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</p>
-                                </button>
-                                <div class="input-group mb-3 d-none" id="areaInputNameChange${subItem.todoSubItemID}">
-                                    <input id="inputNameChange${subItem.todoSubItemID}" onfocusout="taskNameChange('${subItem.todoSubItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                                <p class="font-weight-light mx-2 mt-1" onclick="displayTaskInput() id="subTaskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</p>
+                            <div class="input-group mb-3 d-none" id="subAreaInputNameChange${subItem.todoSubItemID}">
+                                    <input id="subInputNameChange${subItem.todoSubItemID}" onfocusout="taskNameChange('${subItem.todoSubItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
                                     <div class="input-group-append">
                                     </div>
                                 </div>
@@ -262,11 +263,6 @@ function displayItems(data) {
                                 <button class="btn text-white float-right" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.subItemId}, true)">
                                     <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                         <path d="M2 30 L30 2 M30 30 L2 2" />
-                                    </svg>
-                                </button>
-                                <button class="btn text-white float-right" id="btnEditTaskName${subItem.todoSubItemID}" onclick="displayTaskInput()">
-                                    <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                        <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
                                     </svg>
                                 </button>
                             </div>
