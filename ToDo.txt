@@ -35,4 +35,4 @@ Figure out how to do a sub task on backend
                 </div>
 
 
-				newStatus, itemId, subItemId, itemTaskName, isSubTask
+				typeOfChange, newStatus, itemId, subItemId, itemTaskName, isSubTask

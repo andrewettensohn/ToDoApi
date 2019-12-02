@@ -89,17 +89,32 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
 
 }
 
-function taskNameChange(itemId) {
+function taskNameChange(itemId, subItemId, isSubTask) {
 
-    var newTaskName = $(`#inputNameChange${itemId}`).val();
-    var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
+    if (isSubTask == true) {
 
 
-    const item = {
-        todoItemID: parseInt(itemId, 10),
-        taskStatus: taskStatus,
-        taskName: newTaskName
-    };
+        var item = {
+            todoSubItemID: parseInt(subItemId, 10),
+            todoItemID: parseInt(itemId, 10),
+            subTaskStatus: taskStatus,
+            subTaskName: newTaskName
+        };
+
+
+
+    } else if (isSubTask == false) {
+
+        var newTaskName = $(`#inputNameChange${itemId}`).val();
+        var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
+
+        var item = {
+            todoItemID: parseInt(itemId, 10),
+            taskStatus: taskStatus,
+            taskName: newTaskName
+        };
+
+    }
 
     fetch(`${uri}/${itemId}`, {
         method: 'PUT',
@@ -116,16 +131,12 @@ function taskNameChange(itemId) {
 
 function displayTaskInput(itemId) {
 
-    console.log("Doing")
-
     $(`#taskNameHeader${itemId}`).addClass('d-none');
     $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
     $(`#inputNameChange${itemId}`).focus();
 }
 
 function deleteTask(itemId, subItemId, isSubTask) {
-
-    console.log(isSubTask)
 
     if (isSubTask == true) {
 
@@ -186,7 +197,7 @@ function displayItems(data) {
                         <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
                             <h5 onclick="displayTaskInput('${item.todoItemID}')" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
                         <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
-                                <input id="inputNameChange${item.todoItemID}" maxlength="27" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                                <input id="inputNameChange${item.todoItemID}" maxlength="25" onfocusout="taskNameChange('${item.todoItemID}', 'N/A', false)" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                 </div>
                             </div>
@@ -217,6 +228,7 @@ function displayItems(data) {
                 </div>
                 </div>
             </div>
+            <br />
             `;
 
         var newDiv = document.createElement('div');
