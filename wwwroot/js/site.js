@@ -95,6 +95,8 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         var newTaskName = $(`#subInputNameChange${subItemId}`).val();
         var taskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
 
+        //var taskNameElement
+
         var uriType = uri2;
         var idToSend = subItemId;
 
@@ -106,12 +108,13 @@ function taskNameChange(itemId, subItemId, isSubTask) {
             subTaskName: newTaskName
         };
 
-        console.log(item)
 
     } else if (isSubTask == false) {
 
         var newTaskName = $(`#inputNameChange${itemId}`).val();
         var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
+
+        var taskNameElement = $(`#taskNameHeader${itemId}`);
 
         var uriType = uri;
         var idToSend = itemId;
@@ -135,6 +138,7 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         .then(() => getItems())
         .catch(error => console.error('Unable to delete item.', error));
 
+    //.then(() => $(`#${taskNameElement}`).text(taskName))
 }
 
 function displayTaskInput(itemId, subItemId, isSubTask) {
@@ -158,7 +162,7 @@ function deleteTask(itemId, subItemId, isSubTask) {
 
     if (isSubTask == true) {
 
-        fetch(`${uri2}/${itemId}/${subItemId}`, {
+        fetch(`${uri2}/${subItemId}`, {
             method: 'DELETE'
         })
             .then(() => getItems())
@@ -189,12 +193,19 @@ function toggleCollapse(itemId, isSubTask) {
 
 }
 
-function displayItems(data) {
+function addSubItem() {
 
-    var cheveronHide = "";
+
+
+}
+
+function displayItems(data) {
 
 
     data.forEach(item => {
+
+        var cheveronHide = "";
+        var addSubTaskHide = "";
 
 
         if (item.todoSubItems == null) {
@@ -204,48 +215,51 @@ function displayItems(data) {
         }
             var taskHTML = `
 
-              <div id="taskAccordion${item.todoItemID}">
-                <div id="taskCard${item.todoItemID}" class="card bg-dark">
-                    <svg class="${cheveronHide}" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                        <path d="M30 12 L16 24 2 12" />
-                    </svg>
-                    <div class="card-header" id="taskHeading${item.todoItemID}">
-                        <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
-                        <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
-                            <h5 onclick="displayTaskInput('${item.todoItemID}', 'N/A', false)" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
-                        <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
-                                <input id="inputNameChange${item.todoItemID}" maxlength="25" onfocusout="taskNameChange('${item.todoItemID}', 'N/A', false)" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
+            <div id="taskAccordion${item.todoItemID}">
+                    <div id="taskCard${item.todoItemID}" class="card bg-dark">
+                        <div>
+                            <svg class="${addSubTaskHide} float-left my-1" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M16 2 L16 30 M2 16 L30 16" />
+                            </svg>
+                            <svg class="${cheveronHide} align-middle mr-4" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M30 10 L16 26 2 10 Z" />
+                            </svg>
+                            <svg class="float-right my-1" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID}, 'N/A', false)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M2 30 L30 2 M30 30 L2 2" />
+                            </svg>
+                        </div>
+                        <div class="card-header" id="taskHeading${item.todoItemID}">
+                            <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
+                            <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
+                                <h5 onclick="displayTaskInput('${item.todoItemID}', 'N/A', false)" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
+                                <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
+                                    <input id="inputNameChange${item.todoItemID}" maxlength="25" onfocusout="taskNameChange('${item.todoItemID}', 'N/A', false)" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="d-none">
-                            <p id="hiddenTaskStatus${item.todoItemID}">${item.taskStatus}</p>
-                        </div>
-                        <div class="dropdown show">
-                            <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${item.todoItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                ${item.taskStatus}
-                            </a>
-                            <div class="dropdown-menu ml-3 mt-1" aria-labelledby="statusDropDown${item.todoItemID}">
-                                <a class="dropdown-item" onclick="taskStatusChange('Not Started', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Not Started</a>
-                                <a class="dropdown-item" onclick="taskStatusChange('In-Progress', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">In-Progress</a>
-                                <a class="dropdown-item" onclick="taskStatusChange('Completed', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Completed</a>
+                            <div class="d-none">
+                                <p id="hiddenTaskStatus${item.todoItemID}">${item.taskStatus}</p>
+                            </div>
+                            <div class="dropdown show">
+                                <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${item.todoItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    ${item.taskStatus}
+                                </a>
+                                <div class="dropdown-menu ml-3 mt-1" aria-labelledby="statusDropDown${item.todoItemID}">
+                                    <a class="dropdown-item" onclick="taskStatusChange('Not Started', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Not Started</a>
+                                    <a class="dropdown-item" onclick="taskStatusChange('In-Progress', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">In-Progress</a>
+                                    <a class="dropdown-item" onclick="taskStatusChange('Completed', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Completed</a>
+                                </div>
+                            </div>
+                            <div>
                             </div>
                         </div>
-                        <div>
-                            <button class="btn text-white float-right" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID}, 'N/A', false)">
-                                <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                    <path d="M2 30 L30 2 M30 30 L2 2" />
-                                </svg>
-                            </button>
+                        <div id="taskCollapse${item.todoItemID}" class="collapse bg-secondary" aria-labelledby="taskHeading${item.todoItemID}" item-parent="#taskAccordion${item.todoItemID}">
+
                         </div>
                     </div>
-                <div id="taskCollapse${item.todoItemID}" class="collapse bg-secondary" aria-labelledby="taskHeading${item.todoItemID}" item-parent="#taskAccordion${item.todoItemID}">
-                
                 </div>
-                </div>
-            </div>
-            <br />
+                <br />
             `;
 
         var newDiv = document.createElement('div');
@@ -260,9 +274,14 @@ function displayItems(data) {
 
                    <div id="subAccordion${subItem.todoSubItemID}">
                     <div class="card bg-dark">
-                        <svg class="${cheveronHide}" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                            <path d="M30 12 L16 24 2 12" />
+                        <div>
+                        <svg class="${cheveronHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M30 10 L16 26 2 10 Z" />
                         </svg>
+                        <svg class="float-right my-1" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <path d="M2 30 L30 2 M30 30 L2 2" />
+                        </svg>
+                    </div>
                         <div class="card-header" id="subHeading${subItem.todoSubItemID}">
                             <img id="subStatusIcon${subItem.todoSubItemID}" class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
                             <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
@@ -287,11 +306,6 @@ function displayItems(data) {
                                 </div>
                             </div>
                             <div>
-                                <button class="btn text-white float-right" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.subItemId}, true)">
-                                    <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                        <path d="M2 30 L30 2 M30 30 L2 2" />
-                                    </svg>
-                                </button>
                             </div>
                         </div>
                         <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" data-parent="#subAccordion${subItem.todoSubItemID}">

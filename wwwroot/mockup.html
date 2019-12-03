@@ -8,51 +8,7 @@
 
 
 
-    <div id="taskAccordion${item.todoItemID}">
-        <div id="taskCard${item.todoItemID}" class="card bg-dark">
-            <div class="card-header" id="taskHeading${item.todoItemID}" onclick="toggleCollapse(`${item.todoItemID}`)">
-                <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
-                <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
-                    <button class="btn text-white" id="btnTaskDropDown${item.todoItemID}" data-toggle="collapse" data-target="#taskCollapse${item.todoItemID}" aria-expanded="false" aria-controls="taskCollapse${item.todoItemID}" ${accordionBtnState}>
-                        <h4 id="taskNameHeader${item.todoItemID}">${item.taskName}</h4>
-                    </button>
-                    <div class="input-group mb-3 d-none" id="areaInputNameChange${item.todoItemID}">
-                        <input id="inputNameChange${item.todoItemID}" onfocusout="taskNameChange('${item.todoItemID}')" type="text" class="form-control bg-dark text-white border-0" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                        </div>
-                    </div>
-                </div>
-                <div class="d-none">
-                    <p id="hiddenTaskStatus${item.todoItemID}">${item.taskStatus}</p>
-                </div>
-                <div class="dropdown show">
-                    <a class="btn text-white dropdown-toggle float-left" href="#" role="button" id="statusDropDown${item.todoItemID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        ${item.taskStatus}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="statusDropDown${item.todoItemID}">
-                        <a class="dropdown-item" onclick="taskStatusChange('Not Started', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Not Started</a>
-                        <a class="dropdown-item" onclick="taskStatusChange('In-Progress', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">In-Progress</a>
-                        <a class="dropdown-item" onclick="taskStatusChange('Completed', '${item.todoItemID}', 'N/A', '${item.taskName}', false)" href="#">Completed</a>
-                    </div>
-                </div>
-                <div>
-                    <button class="btn text-white float-right" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID})">
-                        <svg id="i-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                            <path d="M2 30 L30 2 M30 30 L2 2" />
-                        </svg>
-                    </button>
-                    <button class="btn text-white float-right" id="btnEditTaskName${item.todoItemID}" onclick="displayTaskInput('${item.todoItemID}')">
-                        <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                            <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <div id="taskCollapse${item.todoItemID}" class="collapse bg-secondary" aria-labelledby="taskHeading${item.todoItemID}" item-parent="#taskAccordion${item.todoItemID}">
-
-            </div>
-        </div>
-    </div>
+    
 
 
 

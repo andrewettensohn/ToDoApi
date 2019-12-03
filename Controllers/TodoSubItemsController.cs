@@ -51,6 +51,11 @@ namespace ToDoApi.Controllers
                 return BadRequest();
             }
 
+            if (todoSubItem.SubTaskName == "" || todoSubItem.SubTaskName is null)
+            {
+                todoSubItem.SubTaskName = "Untitled";
+            }
+
             _context.Entry(todoSubItem).State = EntityState.Modified;
 
             try
@@ -76,6 +81,12 @@ namespace ToDoApi.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoSubItem>> PostTodoSubItem(TodoSubItem todoSubItem)
         {
+
+            if(todoSubItem.SubTaskName == "" || todoSubItem.SubTaskName is null)
+            {
+                todoSubItem.SubTaskName = "Untitled";
+            }
+
             _context.TodoSubItems.Add(todoSubItem);
             await _context.SaveChangesAsync();
 
