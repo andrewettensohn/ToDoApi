@@ -1,7 +1,6 @@
 ﻿const uri = 'api/TodoItems';
 const uri1 = 'api/TodoItems/Tasks';
 const uri2 = 'api/TodoSubItems';
-let todos = [];
 
 function getItems() {
 
@@ -42,7 +41,7 @@ function addItem() {
 
 function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask) {
 
-    if (isSubTask == true) {
+    if (isSubTask) {
 
         var uriType = uri2;
         var idToSend = subItemId;
@@ -217,11 +216,7 @@ function addSubItem(itemId) {
         body: JSON.stringify(item)
     })
         .then(response => response.json())
-        .then(() => getItems())
-        .then(() => $("#add-name").focus())
-        .then(() => {
-            addNameTextbox.value = '';
-        })
+        .then(data => displaySubItems(data))
         .catch(error => console.error('Unable to add item.', error));
 
 }
@@ -231,20 +226,16 @@ function displayItems(data) {
 
     data.forEach(item => {
 
-        var cheveronHide = "";
+        var cheveronHide = item.todoSubItems ? "" : 'd-none';
+       
         var addSubTaskHide = "";
 
-
-        if (item.todoSubItems == null) {
-
-            cheveronHide = "d-none";
-        }
         var taskHTML = `
 
             <div id="taskAccordion${item.todoItemID}">
                     <div id="taskCard${item.todoItemID}" class="card bg-dark">
                         <div>
-                            <svg class="${addSubTaskHide} float-left my-1" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <svg class="${addSubTaskHide} float-left my-1" onclick="addSubItem(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M16 2 L16 30 M2 16 L30 16" />
                             </svg>
                             <svg class="${cheveronHide} align-middle mr-4" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -297,22 +288,37 @@ function displayItems(data) {
             displaySubItems(item);
 
         }
-
     });
 
-    todos = data;
 }
+
 
 function displaySubItems(item) {
 
-    var cheveronHide = "";
+    if ('todoSubItems' in item) {
 
-    if (item.todoSubItems == null) {
+        var cheveronHide = item.todoSubItems ? "" : "d-none";
 
-        cheveronHide = "d-none";
+        item.todoSubItems.forEach(subItem => {
+
+            createSubTaskHTML(subItem);
+
+        });
+
+    } else {
+
+        var cheveronHide = "";
+
+        console.log('running')
+
+        var subItem = item;
+
+        createSubTaskHTML(subItem);
+
     }
 
-    item.todoSubItems.forEach(subItem => {
+    function createSubTaskHTML(subItem) {
+
 
         var subTaskHTML = `
 
@@ -365,5 +371,5 @@ function displaySubItems(item) {
         newDiv.innerHTML = subTaskHTML;
         document.getElementById(`taskCollapse${item.todoItemID}`).appendChild(newDiv);
 
-    });
+    }
 }
