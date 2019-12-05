@@ -171,7 +171,7 @@ function deleteTask(itemId, subItemId, isSubTask) {
         fetch(`${uri2}/${subItemId}`, {
             method: 'DELETE'
         })
-            .then(() => getItems())
+            .then(() => $(`#subAccordion${subItemId}`).remove())
             .catch(error => console.error('Unable to delete item.', error));
 
     }
@@ -180,7 +180,7 @@ function deleteTask(itemId, subItemId, isSubTask) {
         fetch(`${uri}/${itemId}`, {
             method: 'DELETE'
         })
-            .then(() => getItems())
+            .then(() => $(`#taskAccordion${itemId}`).remove())
             .catch(error => console.error('Unable to delete item.', error));
     }
 }
@@ -309,11 +309,13 @@ function displaySubItems(item) {
 
         var cheveronHide = "";
 
-        console.log('running')
-
         var subItem = item;
 
+        $(`#i-chevron-bottom${item.todoItemID}`).toggleClass('d-none');
+
         createSubTaskHTML(subItem);
+
+        toggleCollapse(`${item.todoItemID}`, false);
 
     }
 
