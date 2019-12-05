@@ -15,5 +15,7 @@ namespace TodoApi.Models
 
         public string SubTaskStatus { get; set; }
 
+        public string SubTaskDescription { get; set; }
+
     }
 }

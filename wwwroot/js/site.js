@@ -121,7 +121,6 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         var taskNameElement = `taskNameHeader${itemId}`;
         var inputAreaElement = `areaInputNameChange${itemId}`;
 
-
         var uriType = uri;
         var idToSend = itemId;
 
@@ -307,15 +306,17 @@ function displaySubItems(item) {
 
     } else {
 
-        var cheveronHide = "";
-
         var subItem = item;
-
-        $(`#i-chevron-bottom${item.todoItemID}`).toggleClass('d-none');
 
         createSubTaskHTML(subItem);
 
-        toggleCollapse(`${item.todoItemID}`, false);
+        if (!$(`#taskCollapse${subItem.todoItemID}`).hasClass('show')) {
+
+            toggleCollapse(`${item.todoItemID}`, false);
+
+        }
+
+        $(`#i-chevron-bottom${item.todoItemID}`).toggleClass('d-none');
 
     }
 
