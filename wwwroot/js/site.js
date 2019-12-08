@@ -2,6 +2,7 @@
 const uri1 = 'api/TodoItems/Tasks';
 const uri2 = 'api/TodoSubItems';
 
+//GET ALL
 function getItems() {
 
     $("#output").empty();
@@ -12,6 +13,7 @@ function getItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
+//POST TASK
 function addItem() {
 
     const addNameTextbox = document.getElementById('add-name');
@@ -38,7 +40,7 @@ function addItem() {
         .catch(error => console.error('Unable to add item.', error));
 } 
 
-
+//POST SUB-TASK
 function addSubItem(itemId) {
 
     const item = {
@@ -61,7 +63,7 @@ function addSubItem(itemId) {
         .catch(error => console.error('Unable to add item.', error));
 }
 
-
+//PUT STATUS CHANGE
 function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask) {
 
     if (isSubTask) {
@@ -113,6 +115,7 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
 
 }
 
+//PUT NAME CHANGE
 function taskNameChange(itemId, subItemId, isSubTask) {
 
     if (isSubTask == true) {
@@ -178,6 +181,7 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         .catch(error => console.error('Unable to delete item.', error));
 }
 
+//DISPLAY TASK INPUT
 function displayTaskInput(itemId, subItemId, isSubTask) {
 
     if (isSubTask == true) {
@@ -195,6 +199,7 @@ function displayTaskInput(itemId, subItemId, isSubTask) {
     }
 }
 
+//DELETE TASK
 function deleteTask(itemId, subItemId, isSubTask) {
 
     if (isSubTask == true) {
@@ -218,6 +223,50 @@ function deleteTask(itemId, subItemId, isSubTask) {
     }
 }
 
+//DISPLAY SUB TASK DESCRIPTION
+function addSubTaskDescription(itemId, subItemId) {
+
+    console.log(itemId, subItemId)
+
+    $(`#i-chevron-bottom-sub${subItemId}`).removeClass('d-none');
+    toggleCollapse(subItemId, true);
+
+}
+
+//PUT SUB TASK DESCRIPTION
+function changeSubTaskDescription(itemId, subItemId) {
+
+    var subTaskName = $(`#subTaskNameHeader${subItemId}`).text();
+    var subTaskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
+    var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+    subTaskDescription = subTaskDescription.toString();
+
+    console.log(subTaskDescription)
+
+
+    const item = {
+
+        todoSubItemID: parseInt(subItemId, 10),
+        todoItemID: parseInt(itemId, 10),
+        subTaskStatus: subTaskStatus,
+        subTaskName: subTaskName,
+        subTaskDescription: subTaskDescription
+    };
+
+    fetch(`${uri2}/${subItemId}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        .catch(error => console.error('Unable to delete item.', error));
+
+
+}
+
+//DISPLAY COLLAPSABLE
 function toggleCollapse(itemId, isSubTask) {
 
     if (isSubTask == true) {
@@ -231,6 +280,7 @@ function toggleCollapse(itemId, isSubTask) {
 
 }
 
+//CREATE TASK HTML
 function displayItems(data) {
 
 
@@ -300,13 +350,11 @@ function displayItems(data) {
 
 }
 
-
+//CREATE SUB-TASK HTML
 function displaySubItems(item) {
 
 
     if ('todoSubItems' in item) {
-
-        //var cheveronHide = item.subTaskDescription ? "" : "d-none";
 
         var caretHide = "d-none";
 
@@ -400,46 +448,4 @@ function displaySubItems(item) {
         document.getElementById(`taskCollapse${item.todoItemID}`).appendChild(newDiv);
 
     }
-}
-
-function addSubTaskDescription(itemId, subItemId) {
-
-    console.log(itemId, subItemId)
-
-    $(`#i-chevron-bottom-sub${subItemId}`).removeClass('d-none');
-    toggleCollapse(subItemId, true);
-
-}
-
-function changeSubTaskDescription(itemId, subItemId) {
-
-    var subTaskName = $(`#subTaskNameHeader${subItemId}`).text();
-    var subTaskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
-    var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
-    subTaskDescription = subTaskDescription.toString();
-
-    console.log(subTaskDescription)
-
-
-    const item = {
-
-        todoSubItemID: parseInt(subItemId, 10),
-        todoItemID: parseInt(itemId, 10),
-        subTaskStatus: subTaskStatus,
-        subTaskName: subTaskName,
-        subTaskDescription: subTaskDescription
-    };
-
-    fetch(`${uri2}/${subItemId}`, {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(item)
-    })
-        //.then(() => $(`#${hiddenStatusElement}`).text(`${newStatus}`))
-        .catch(error => console.error('Unable to delete item.', error));
-
-
 }
