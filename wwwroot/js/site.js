@@ -71,12 +71,15 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
         var dropDownElement = `subStatusDropDown${subItemId}`;
         var statusIconElement = `subStatusIcon${subItemId}`;
         var hiddenStatusElement = `subHiddenTaskStatus${subItemId}`;
+        var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+        subTaskDescription = subTaskDescription.toString();
 
         var item = {
             todoSubItemID: parseInt(subItemId, 10),
             todoItemID: parseInt(itemId, 10),
             subTaskName: itemTaskName,
-            subTaskStatus: newStatus
+            subTaskStatus: newStatus,
+            subTaskDescription: subTaskDescription
         };
 
     } else if (isSubTask == false) {
@@ -117,6 +120,9 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         var newTaskName = $(`#subInputNameChange${subItemId}`).val();
         newTaskName = newTaskName.toString();
         if (newTaskName == "") { newTaskName = "Untitled" }
+
+        var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+        subTaskDescription = subTaskDescription.toString();
         
         var taskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
 
@@ -131,7 +137,8 @@ function taskNameChange(itemId, subItemId, isSubTask) {
             todoSubItemID: parseInt(subItemId, 10),
             todoItemID: parseInt(itemId, 10),
             subTaskStatus: taskStatus,
-            subTaskName: newTaskName
+            subTaskName: newTaskName,
+            subTaskDescription: subTaskDescription
         };
 
 
