@@ -36,8 +36,31 @@ function addItem() {
             addNameTextbox.value = '';
         })
         .catch(error => console.error('Unable to add item.', error));
-
 } 
+
+
+function addSubItem(itemId) {
+
+    const item = {
+
+        todoItemID: parseInt(itemId, 10),
+        subTaskStatus: "Not Started",
+        subTaskName: ""
+    };
+
+    fetch(uri2, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        .then(response => response.json())
+        .then(data => displaySubItems(data))
+        .catch(error => console.error('Unable to add item.', error));
+}
+
 
 function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask) {
 
@@ -97,8 +120,8 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         
         var taskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
 
-        var taskNameElement = `subTaskNameHeader${itemId}`;
-        var inputAreaElement = `subAreaInputNameChange${itemId}`;
+        var taskNameElement = `subTaskNameHeader${subItemId}`;
+        var inputAreaElement = `subAreaInputNameChange${subItemId}`;
 
         var uriType = uri2;
         var idToSend = subItemId;
@@ -142,7 +165,7 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         },
         body: JSON.stringify(item)
     })
-        .then(() => $(`#${taskNameElement}`).text(`${newTaskName}`))
+        .then(() => $(`#${taskNameElement}`).text(newTaskName))
         .then(() => $(`#${inputAreaElement}`).toggleClass('d-none'))
         .then(() => $(`#${taskNameElement}`).toggleClass('d-none'))
         .catch(error => console.error('Unable to delete item.', error));
@@ -175,6 +198,8 @@ function deleteTask(itemId, subItemId, isSubTask) {
             .then(() => $(`#subAccordion${subItemId}`).remove())
             .catch(error => console.error('Unable to delete item.', error));
 
+
+
     }
     else if (isSubTask == false) {
 
@@ -199,44 +224,19 @@ function toggleCollapse(itemId, isSubTask) {
 
 }
 
-function addSubItem(itemId) {
-
-    const item = {
-
-        todoItemID: parseInt(itemId, 10),
-        subTaskStatus: "Not Started",
-        subTaskName: ""
-    };
-
-    fetch(uri2, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(item)
-    })
-        .then(response => response.json())
-        .then(data => displaySubItems(data))
-        .catch(error => console.error('Unable to add item.', error));
-
-}
-
 function displayItems(data) {
 
 
     data.forEach(item => {
 
         var cheveronHide = item.todoSubItems ? "" : 'd-none';
-       
-        var addSubTaskHide = "";
 
         var taskHTML = `
 
             <div id="taskAccordion${item.todoItemID}">
                     <div id="taskCard${item.todoItemID}" class="card bg-dark">
                         <div>
-                            <svg class="${addSubTaskHide} float-left my-1" onclick="addSubItem(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <svg class="float-left my-1" onclick="addSubItem(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M16 2 L16 30 M2 16 L30 16" />
                             </svg>
                             <svg class="${cheveronHide} align-middle mr-4" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -301,12 +301,14 @@ function displaySubItems(item) {
 
         //var cheveronHide = item.subTaskDescription ? "" : "d-none";
 
-        var cheveronHide = "d-none";
+        var caretHide = "d-none";
 
         item.todoSubItems.forEach(subItem => {
 
+            console.log(subItem.subTaskDescription)
+
             if (subItem.subTaskDescription != null) {
-                cheveronHide = "";
+                caretHide = "";
             }
 
             createSubTaskHTML(subItem);
@@ -315,7 +317,9 @@ function displaySubItems(item) {
 
     } else {
 
-        var cheveronHide = "d-none";
+        var caretHide = "d-none";
+
+        $(`#i-chevron-bottom${item.todoItemID}`).removeClass('d-none');
 
         var subItem = item;
 
@@ -327,8 +331,6 @@ function displaySubItems(item) {
 
         }
 
-        //$(`#i-chevron-bottom${item.todoItemID}`).addClass('d-none');
-
     }
 
     function createSubTaskHTML(subItem) {
@@ -339,7 +341,10 @@ function displaySubItems(item) {
             <div id="subAccordion${subItem.todoSubItemID}">
             <div class="card bg-dark">
                 <div>
-                <svg class="${cheveronHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="float-left my-1" onclick="addSubTaskDescription(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M16 2 L16 30 M2 16 L30 16" />
+                </svg>
+                <svg class="${caretHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M30 10 L16 26 2 10 Z" />
                 </svg>
                 <svg class="float-right my-1" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -386,4 +391,8 @@ function displaySubItems(item) {
         document.getElementById(`taskCollapse${item.todoItemID}`).appendChild(newDiv);
 
     }
+}
+
+function addSubTaskDescription(itemId) {
+    //stuff goes here!
 }
