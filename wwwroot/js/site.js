@@ -296,17 +296,26 @@ function displayItems(data) {
 
 function displaySubItems(item) {
 
+
     if ('todoSubItems' in item) {
 
-        var cheveronHide = item.todoSubItems ? "" : "d-none";
+        //var cheveronHide = item.subTaskDescription ? "" : "d-none";
+
+        var cheveronHide = "d-none";
 
         item.todoSubItems.forEach(subItem => {
+
+            if (subItem.subTaskDescription != null) {
+                cheveronHide = "";
+            }
 
             createSubTaskHTML(subItem);
 
         });
 
     } else {
+
+        var cheveronHide = "d-none";
 
         var subItem = item;
 
@@ -365,7 +374,7 @@ function displaySubItems(item) {
                 </div>
                 <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" data-parent="#subAccordion${subItem.todoSubItemID}">
                     <br />
-                    <p>Using Bootstrap accordions as an alternative to tables.</p>
+                    ${subItem.subTaskDescription}
                 </div>
             </div>
         </div>
