@@ -36,8 +36,31 @@ function addItem() {
             addNameTextbox.value = '';
         })
         .catch(error => console.error('Unable to add item.', error));
-
 } 
+
+
+function addSubItem(itemId) {
+
+    const item = {
+
+        todoItemID: parseInt(itemId, 10),
+        subTaskStatus: "Not Started",
+        subTaskName: ""
+    };
+
+    fetch(uri2, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        .then(response => response.json())
+        .then(data => displaySubItems(data))
+        .catch(error => console.error('Unable to add item.', error));
+}
+
 
 function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask) {
 
@@ -48,12 +71,15 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
         var dropDownElement = `subStatusDropDown${subItemId}`;
         var statusIconElement = `subStatusIcon${subItemId}`;
         var hiddenStatusElement = `subHiddenTaskStatus${subItemId}`;
+        var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+        subTaskDescription = subTaskDescription.toString();
 
         var item = {
             todoSubItemID: parseInt(subItemId, 10),
             todoItemID: parseInt(itemId, 10),
             subTaskName: itemTaskName,
-            subTaskStatus: newStatus
+            subTaskStatus: newStatus,
+            subTaskDescription: subTaskDescription
         };
 
     } else if (isSubTask == false) {
@@ -93,11 +119,15 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
         var newTaskName = $(`#subInputNameChange${subItemId}`).val();
         newTaskName = newTaskName.toString();
+        if (newTaskName == "") { newTaskName = "Untitled" }
 
+        var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+        subTaskDescription = subTaskDescription.toString();
+        
         var taskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
 
-        var taskNameElement = `subTaskNameHeader${itemId}`;
-        var inputAreaElement = `subAreaInputNameChange${itemId}`;
+        var taskNameElement = `subTaskNameHeader${subItemId}`;
+        var inputAreaElement = `subAreaInputNameChange${subItemId}`;
 
         var uriType = uri2;
         var idToSend = subItemId;
@@ -107,7 +137,8 @@ function taskNameChange(itemId, subItemId, isSubTask) {
             todoSubItemID: parseInt(subItemId, 10),
             todoItemID: parseInt(itemId, 10),
             subTaskStatus: taskStatus,
-            subTaskName: newTaskName
+            subTaskName: newTaskName,
+            subTaskDescription: subTaskDescription
         };
 
 
@@ -115,12 +146,12 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
         var newTaskName = $(`#inputNameChange${itemId}`).val();
         newTaskName = newTaskName.toString();
+        if (newTaskName == "") { newTaskName = "Untitled" }
 
         var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
 
         var taskNameElement = `taskNameHeader${itemId}`;
         var inputAreaElement = `areaInputNameChange${itemId}`;
-
 
         var uriType = uri;
         var idToSend = itemId;
@@ -141,7 +172,7 @@ function taskNameChange(itemId, subItemId, isSubTask) {
         },
         body: JSON.stringify(item)
     })
-        .then(() => $(`#${taskNameElement}`).text(`${newTaskName}`))
+        .then(() => $(`#${taskNameElement}`).text(newTaskName))
         .then(() => $(`#${inputAreaElement}`).toggleClass('d-none'))
         .then(() => $(`#${taskNameElement}`).toggleClass('d-none'))
         .catch(error => console.error('Unable to delete item.', error));
@@ -174,6 +205,8 @@ function deleteTask(itemId, subItemId, isSubTask) {
             .then(() => $(`#subAccordion${subItemId}`).remove())
             .catch(error => console.error('Unable to delete item.', error));
 
+
+
     }
     else if (isSubTask == false) {
 
@@ -198,44 +231,19 @@ function toggleCollapse(itemId, isSubTask) {
 
 }
 
-function addSubItem(itemId) {
-
-    const item = {
-
-        todoItemID: parseInt(itemId, 10),
-        subTaskStatus: "Not Started",
-        subTaskName: ""
-    };
-
-    fetch(uri2, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(item)
-    })
-        .then(response => response.json())
-        .then(data => displaySubItems(data))
-        .catch(error => console.error('Unable to add item.', error));
-
-}
-
 function displayItems(data) {
 
 
     data.forEach(item => {
 
         var cheveronHide = item.todoSubItems ? "" : 'd-none';
-       
-        var addSubTaskHide = "";
 
         var taskHTML = `
 
             <div id="taskAccordion${item.todoItemID}">
                     <div id="taskCard${item.todoItemID}" class="card bg-dark">
                         <div>
-                            <svg class="${addSubTaskHide} float-left my-1" onclick="addSubItem(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <svg class="float-left my-1" onclick="addSubItem(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M16 2 L16 30 M2 16 L30 16" />
                             </svg>
                             <svg class="${cheveronHide} align-middle mr-4" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -295,11 +303,20 @@ function displayItems(data) {
 
 function displaySubItems(item) {
 
+
     if ('todoSubItems' in item) {
 
-        var cheveronHide = item.todoSubItems ? "" : "d-none";
+        //var cheveronHide = item.subTaskDescription ? "" : "d-none";
+
+        var caretHide = "d-none";
 
         item.todoSubItems.forEach(subItem => {
+
+            console.log(subItem.subTaskDescription)
+
+            if (subItem.subTaskDescription != null) {
+                caretHide = "";
+            }
 
             createSubTaskHTML(subItem);
 
@@ -307,15 +324,19 @@ function displaySubItems(item) {
 
     } else {
 
-        var cheveronHide = "";
+        var caretHide = "d-none";
+
+        $(`#i-chevron-bottom${item.todoItemID}`).removeClass('d-none');
 
         var subItem = item;
 
-        $(`#i-chevron-bottom${item.todoItemID}`).toggleClass('d-none');
-
         createSubTaskHTML(subItem);
 
-        toggleCollapse(`${item.todoItemID}`, false);
+        if (!$(`#taskCollapse${subItem.todoItemID}`).hasClass('show')) {
+
+            toggleCollapse(`${item.todoItemID}`, false);
+
+        }
 
     }
 
@@ -327,7 +348,10 @@ function displaySubItems(item) {
             <div id="subAccordion${subItem.todoSubItemID}">
             <div class="card bg-dark">
                 <div>
-                <svg class="${cheveronHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="float-left my-1" onclick="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M16 2 L16 30 M2 16 L30 16" />
+                </svg>
+                <svg class="${caretHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom-sub${subItem.todoSubItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M30 10 L16 26 2 10 Z" />
                 </svg>
                 <svg class="float-right my-1" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -362,7 +386,9 @@ function displaySubItems(item) {
                 </div>
                 <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" data-parent="#subAccordion${subItem.todoSubItemID}">
                     <br />
-                    <p>Using Bootstrap accordions as an alternative to tables.</p>
+                    <div class="form-group">
+                        <textarea id="subAreaTaskDescription${subItem.todoSubItemID}" class="bg-dark text-white form-control border-0" onfocusout="changeSubTaskDescription('${item.todoItemID}','${subItem.todoSubItemID}')">${subItem.subTaskDescription}</textarea>
+                    </div class=form-group>
                 </div>
             </div>
         </div>
@@ -374,4 +400,46 @@ function displaySubItems(item) {
         document.getElementById(`taskCollapse${item.todoItemID}`).appendChild(newDiv);
 
     }
+}
+
+function addSubTaskDescription(itemId, subItemId) {
+
+    console.log(itemId, subItemId)
+
+    $(`#i-chevron-bottom-sub${subItemId}`).removeClass('d-none');
+    toggleCollapse(subItemId, true);
+
+}
+
+function changeSubTaskDescription(itemId, subItemId) {
+
+    var subTaskName = $(`#subTaskNameHeader${subItemId}`).text();
+    var subTaskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
+    var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+    subTaskDescription = subTaskDescription.toString();
+
+    console.log(subTaskDescription)
+
+
+    const item = {
+
+        todoSubItemID: parseInt(subItemId, 10),
+        todoItemID: parseInt(itemId, 10),
+        subTaskStatus: subTaskStatus,
+        subTaskName: subTaskName,
+        subTaskDescription: subTaskDescription
+    };
+
+    fetch(`${uri2}/${subItemId}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        //.then(() => $(`#${hiddenStatusElement}`).text(`${newStatus}`))
+        .catch(error => console.error('Unable to delete item.', error));
+
+
 }
