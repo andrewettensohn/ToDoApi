@@ -341,10 +341,10 @@ function displaySubItems(item) {
             <div id="subAccordion${subItem.todoSubItemID}">
             <div class="card bg-dark">
                 <div>
-                <svg class="float-left my-1" onclick="addSubTaskDescription(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="float-left my-1" onclick="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M16 2 L16 30 M2 16 L30 16" />
                 </svg>
-                <svg class="${caretHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="${caretHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom-sub${subItem.todoSubItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M30 10 L16 26 2 10 Z" />
                 </svg>
                 <svg class="float-right my-1" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -379,7 +379,9 @@ function displaySubItems(item) {
                 </div>
                 <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" data-parent="#subAccordion${subItem.todoSubItemID}">
                     <br />
-                    ${subItem.subTaskDescription}
+                    <div class="form-group">
+                        <textarea id="subAreaTaskDescription${subItem.todoSubItemID}" class="bg-dark text-white form-control border-0" onfocusout="changeSubTaskDescription('${item.todoItemID}','${subItem.todoSubItemID}')">${subItem.subTaskDescription}</textarea>
+                    </div class=form-group>
                 </div>
             </div>
         </div>
@@ -393,6 +395,44 @@ function displaySubItems(item) {
     }
 }
 
-function addSubTaskDescription(itemId) {
-    //stuff goes here!
+function addSubTaskDescription(itemId, subItemId) {
+
+    console.log(itemId, subItemId)
+
+    $(`#i-chevron-bottom-sub${subItemId}`).removeClass('d-none');
+    toggleCollapse(subItemId, true);
+
+}
+
+function changeSubTaskDescription(itemId, subItemId) {
+
+    var subTaskName = $(`#subTaskNameHeader${subItemId}`).text();
+    var subTaskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
+    var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
+    subTaskDescription = subTaskDescription.toString();
+
+    console.log(subTaskDescription)
+
+
+    const item = {
+
+        todoSubItemID: parseInt(subItemId, 10),
+        todoItemID: parseInt(itemId, 10),
+        subTaskStatus: subTaskStatus,
+        subTaskName: subTaskName,
+        subTaskDescription: subTaskDescription
+    };
+
+    fetch(`${uri2}/${subItemId}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    })
+        //.then(() => $(`#${hiddenStatusElement}`).text(`${newStatus}`))
+        .catch(error => console.error('Unable to delete item.', error));
+
+
 }
