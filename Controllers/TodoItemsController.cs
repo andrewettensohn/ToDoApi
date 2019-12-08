@@ -131,6 +131,17 @@ namespace ToDoApi.Controllers
             _context.TodoItems.Remove(todoItem);
             await _context.SaveChangesAsync();
 
+            var subItems = await _context.TodoSubItems.ToListAsync();
+
+            foreach(var subItem in subItems)
+            {
+                if(subItem.TodoItemID == id)
+                {
+                    _context.TodoSubItems.Remove(subItem);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             return todoItem;
         }
 
