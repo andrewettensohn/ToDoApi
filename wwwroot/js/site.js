@@ -93,7 +93,8 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
         var newTaskName = $(`#subInputNameChange${subItemId}`).val();
         newTaskName = newTaskName.toString();
-
+        if (newTaskName == "") { newTaskName = "Untitled" }
+        
         var taskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
 
         var taskNameElement = `subTaskNameHeader${itemId}`;
@@ -115,6 +116,7 @@ function taskNameChange(itemId, subItemId, isSubTask) {
 
         var newTaskName = $(`#inputNameChange${itemId}`).val();
         newTaskName = newTaskName.toString();
+        if (newTaskName == "") { newTaskName = "Untitled" }
 
         var taskStatus = $(`#hiddenTaskStatus${itemId}`).text();
 
@@ -316,7 +318,7 @@ function displaySubItems(item) {
 
         }
 
-        $(`#i-chevron-bottom${item.todoItemID}`).toggleClass('d-none');
+        //$(`#i-chevron-bottom${item.todoItemID}`).addClass('d-none');
 
     }
 
