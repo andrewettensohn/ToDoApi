@@ -226,7 +226,6 @@ function deleteTask(itemId, subItemId, isSubTask) {
 //DISPLAY SUB TASK DESCRIPTION
 function addSubTaskDescription(itemId, subItemId) {
 
-    console.log(itemId, subItemId)
 
     $(`#i-chevron-bottom-sub${subItemId}`).removeClass('d-none');
     toggleCollapse(subItemId, true);
@@ -240,8 +239,6 @@ function changeSubTaskDescription(itemId, subItemId) {
     var subTaskStatus = $(`#subHiddenTaskStatus${subItemId}`).text();
     var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
     subTaskDescription = subTaskDescription.toString();
-
-    console.log(subTaskDescription)
 
 
     const item = {
