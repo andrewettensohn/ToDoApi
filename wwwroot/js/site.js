@@ -293,13 +293,13 @@ function displayItems(data) {
             <div id="taskAccordion${item.todoItemID}">
                     <div id="taskCard${item.todoItemID}" class="card bg-dark">
                         <div>
-                            <svg class="float-left my-1" onclick="addSubItem(${item.todoItemID})" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <svg class="float-left my-1" onclick="addSubItem(${item.todoItemID})" touchstart="addSubItem(${item.todoItemID})"  id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M16 2 L16 30 M2 16 L30 16" />
                             </svg>
-                            <svg class="${cheveronHide} align-middle mr-4" onclick="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <svg class="${cheveronHide} align-middle mr-4" onclick="toggleCollapse('${item.todoItemID}', false)" touchstart="toggleCollapse('${item.todoItemID}', false)" id="i-chevron-bottom${item.todoItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M30 10 L16 26 2 10 Z" />
                             </svg>
-                            <svg class="float-right my-1" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID}, 'N/A', false)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <svg class="float-right my-1" id="btnDeleteTask${item.todoItemID}" onclick="deleteTask(${item.todoItemID}, 'N/A', false)" touchstart="deleteTask(${item.todoItemID}, 'N/A', false)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M2 30 L30 2 M30 30 L2 2" />
                             </svg>
                         </div>
@@ -396,13 +396,13 @@ function displaySubItems(item) {
             <div id="subAccordion${subItem.todoSubItemID}">
             <div class="card bg-dark">
                 <div>
-                <svg class="float-left my-1" onclick="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="float-left my-1" onclick="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" touchstart="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M16 2 L16 30 M2 16 L30 16" />
                 </svg>
-                <svg class="${caretHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom-sub${subItem.todoSubItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="${caretHide} align-middle mr-2" onclick="toggleCollapse('${subItem.todoSubItemID}', true)" touchstart="toggleCollapse('${subItem.todoSubItemID}', true)" id="i-chevron-bottom-sub${subItem.todoSubItemID}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M30 10 L16 26 2 10 Z" />
                 </svg>
-                <svg class="float-right my-1" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <svg class="float-right my-1" id="btnDeleteTask${subItem.todoSubItemID}" onclick="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)"  touchstart="deleteTask(${item.todoItemID}, ${subItem.todoSubItemID}, true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="15" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M2 30 L30 2 M30 30 L2 2" />
                 </svg>
             </div>
