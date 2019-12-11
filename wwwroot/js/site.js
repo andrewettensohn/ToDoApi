@@ -68,29 +68,34 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
 
     if (isSubTask) {
 
-        var uriType = uri2;
+        var uriType = uri + `/${itemId}`;
         var idToSend = subItemId;
-        var dropDownElement = `subStatusDropDown${subItemId}`;
-        var statusIconElement = `subStatusIcon${subItemId}`;
-        var hiddenStatusElement = `subHiddenTaskStatus${subItemId}`;
+
         var subTaskDescription = $(`#subAreaTaskDescription${subItemId}`).val();
         subTaskDescription = subTaskDescription.toString();
 
+        var parentTaskName = $(`#taskNameHeader${itemId}`).text();
+        var parentTaskStatus = $(`#hiddenTaskStatus${itemId}`).text();
+
         var item = {
-            todoSubItemID: parseInt(subItemId, 10),
             todoItemID: parseInt(itemId, 10),
-            subTaskName: itemTaskName,
-            subTaskStatus: newStatus,
-            subTaskDescription: subTaskDescription
+            taskName: parentTaskName,
+            taskStatus: parentTaskStatus,
+            todoSubItems: [
+                {
+                    todoSubItemID: parseInt(subItemId, 10),
+                    todoItemID: parseInt(itemId, 10),
+                    subTaskName: itemTaskName,
+                    subTaskStatus: newStatus,
+                    subTaskDescription: subTaskDescription
+                }
+            ]
         };
 
     } else if (isSubTask == false) {
 
         var uriType = uri;
         var idToSend = itemId;
-        var dropDownElement = `statusDropDown${itemId}`;
-        var statusIconElement = `statusIcon${itemId}`;
-        var hiddenStatusElement = `hiddenTaskStatus${itemId}`;
 
         var item = {
             todoItemID: parseInt(itemId, 10),
@@ -108,10 +113,36 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
         },
         body: JSON.stringify(item)
     })
-        .then(() => $(`#${dropDownElement}`).html(newStatus))
-        .then(() => $(`#${statusIconElement}`).attr("src", `lib/statusIcons/${newStatus}.png`))
-        .then(() => $(`#${hiddenStatusElement}`).text(`${newStatus}`))
+        .then(item => displayStatusChange(item))
         .catch(error => console.error('Unable to delete item.', error));
+
+    function displayStatusChange(item) {
+
+        if (isSubTask) {
+
+            if (newStatus == "In-Progress") {
+
+                $(`#statusDropDown${itemId}`).html(newStatus)
+                $(`#statusIcon${itemId}`).attr("src", `lib/statusIcons/${newStatus}.png`)
+                $(`#hiddenTaskStatus${itemId}`).text(`${newStatus}`)
+
+            }
+
+            $(`#subStatusDropDown${subItemId}`).html(newStatus)
+            $(`#subStatusIcon${subItemId}`).attr("src", `lib/statusIcons/${newStatus}.png`)
+            $(`#subHiddenTaskStatus${subItemId}`).text(`${newStatus}`)
+        }
+
+        if (isSubTask == false) {
+
+            $(`#statusDropDown${itemId}`).html(newStatus)
+            $(`#statusIcon${itemId}`).attr("src", `lib/statusIcons/${newStatus}.png`)
+            $(`#hiddenTaskStatus${itemId}`).text(`${newStatus}`)
+
+        }
+
+        //KEEP MAKING CHANGES HERE
+    }
 
 }
 
@@ -187,12 +218,16 @@ function displayTaskInput(itemId, subItemId, isSubTask) {
     if (isSubTask == true) {
 
         $(`#subTaskNameHeader${subItemId}`).addClass('d-none');
+        var oldTaskName = $(`#subTaskNameHeader${subItemId}`).text();
+        $(`#subInputNameChange${subItemId}`).val(oldTaskName);
         $(`#subAreaInputNameChange${subItemId}`).toggleClass('d-none');
         $(`#subInputNameChange${subItemId}`).focus();
 
     } else if (isSubTask == false) {
 
         $(`#taskNameHeader${itemId}`).addClass('d-none');
+        var oldTaskName = $(`#taskNameHeader${itemId}`).text();
+        $(`#inputNameChange${itemId}`).val(oldTaskName);
         $(`#areaInputNameChange${itemId}`).toggleClass('d-none');
         $(`#inputNameChange${itemId}`).focus();
 

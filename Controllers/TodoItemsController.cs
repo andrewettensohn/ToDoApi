@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,44 @@ namespace ToDoApi.Controllers
             }
 
             return todoItem;
+        }
+
+        // PUT: api/TodoItems/1/2
+        [HttpPut("{todoItemID}/{todoSubItemID}")]
+        public async Task<IActionResult> PutTodoItemAndSubItem(int todoItemID, int todoSubItemID, TodoItem todoItem)
+        {
+
+            if (todoItemID != todoItem.TodoItemID)
+            {
+                return BadRequest();
+            }
+
+            if (todoItem.TodoSubItems[0].SubTaskStatus == "In-Progress")
+            {
+                todoItem.TaskStatus = todoItem.TodoSubItems[0].SubTaskStatus;
+            }
+
+            _context.Entry(todoItem).State = EntityState.Modified;
+
+            _context.Entry(todoItem.TodoSubItems[0]).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoItemExists(todoItemID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // PUT: api/TodoItems/5
