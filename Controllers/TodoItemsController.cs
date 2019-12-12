@@ -78,6 +78,11 @@ namespace ToDoApi.Controllers
                 return BadRequest();
             }
 
+            if (todoSubItemID != todoItem.TodoSubItems[0].TodoSubItemID)
+            {
+                return BadRequest();
+            }
+
             if (todoItem.TodoSubItems[0].SubTaskStatus == "In-Progress")
             {
                 todoItem.TaskStatus = todoItem.TodoSubItems[0].SubTaskStatus;
@@ -161,6 +166,7 @@ namespace ToDoApi.Controllers
         public async Task<ActionResult<TodoItem>> DeleteTodoItem(int id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
+
             if (todoItem == null)
             {
                 return NotFound();

@@ -113,10 +113,10 @@ function taskStatusChange(newStatus, itemId, subItemId, itemTaskName, isSubTask)
         },
         body: JSON.stringify(item)
     })
-        .then(item => displayStatusChange(item))
+        .then(() => displayStatusChange())
         .catch(error => console.error('Unable to delete item.', error));
 
-    function displayStatusChange(item) {
+    function displayStatusChange() {
 
         if (isSubTask) {
 
