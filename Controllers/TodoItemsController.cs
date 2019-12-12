@@ -52,6 +52,26 @@ namespace ToDoApi.Controllers
             return todoItems;
         }
 
+        // GET: api/TodoItems/InProgress
+        [HttpGet("InProgress")]
+        public async Task<ActionResult<List<TodoItem>>> GetTodoItemsInProgress()
+        {
+            var todoItems = await _context.TodoItems.ToListAsync();
+
+            var todoItemsInProgress = new List<TodoItem>();
+
+            foreach(var item in todoItems)
+            {
+                if(item.TaskStatus == "In-Progress")
+                {
+                    todoItemsInProgress.Add(item);
+                }
+            }
+
+            return todoItemsInProgress;
+        }
+
+
         // GET: api/TodoItems/1/2
         [HttpGet("{todoItemID}/{todoSubItemID}")]
         public async Task<ActionResult<TodoItem>> GetTodoItemAndSubItem(int todoItemID, int todoSubItemID)

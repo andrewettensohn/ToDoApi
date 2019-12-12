@@ -392,8 +392,6 @@ function displaySubItems(item) {
 
         item.todoSubItems.forEach(subItem => {
 
-            console.log(subItem.subTaskDescription)
-
             if (subItem.subTaskDescription != null) {
                 caretHide = "";
             }
