@@ -11,15 +11,45 @@ function getItems(filterOption) {
 
         if (filterOption == "Not Started") {
 
-            $("#filterNotStarted").addClass('active');
+            if ($("#filterNotStarted").hasClass('active')) {
 
+                $("#filterNotStarted").removeClass('active');
+                getItems()
+                return;
+
+            } else {
+
+                $("#filterNotStarted").addClass('active');
+
+            }
+            
         } else if (filterOption == "In-Progress") {
 
-            $("#filterInProgress").addClass('active');
+            if ($("#filterInProgress").hasClass('active')) {
+
+                $("#filterInProgress").removeClass('active');
+                getItems()
+                return;
+
+            } else {
+
+                $("#filterInProgress").addClass('active');
+
+            }
 
         } else if (filterOption == "Completed") {
 
-            $("#filterCompleted").addClass('active');
+            if ($("#filterCompleted").hasClass('active')) {
+
+                $("#filterCompleted").removeClass('active');
+                getItems()
+                return;
+
+            } else {
+
+                $("#filterCompleted").addClass('active');
+
+            }
 
         }
 
