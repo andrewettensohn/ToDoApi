@@ -52,9 +52,9 @@ namespace ToDoApi.Controllers
             return todoItems;
         }
 
-        // GET: api/TodoItems/InProgress
-        [HttpGet("InProgress")]
-        public async Task<ActionResult<List<TodoItem>>> GetTodoItemsInProgress()
+        // GET: api/TodoItems/Filter/Not Started
+        [HttpGet("Filter/{filterStatus}")]
+        public async Task<ActionResult<List<TodoItem>>> GetTodoItemsInProgress(string filterStatus)
         {
             var todoItems = await _context.TodoItems.ToListAsync();
 
@@ -62,7 +62,7 @@ namespace ToDoApi.Controllers
 
             foreach(var item in todoItems)
             {
-                if(item.TaskStatus == "In-Progress")
+                if(item.TaskStatus == filterStatus)
                 {
                     todoItemsInProgress.Add(item);
                 }

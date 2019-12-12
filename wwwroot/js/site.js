@@ -3,14 +3,39 @@ const uri1 = 'api/TodoItems/Tasks';
 const uri2 = 'api/TodoSubItems';
 
 //GET ALL
-function getItems() {
+function getItems(filterOption) {
 
     $("#output").empty();
 
-    fetch(uri1)
-        .then(response => response.json())
-        .then(data => displayItems(data))
-        .catch(error => console.error('Unable to get items.', error));
+    if (typeof filterOption !== "undefined") {
+
+        if (filterOption == "Not Started") {
+
+            $("#filterNotStarted").addClass('active');
+
+        } else if (filterOption == "In-Progress") {
+
+            $("#filterInProgress").addClass('active');
+
+        } else if (filterOption == "Completed") {
+
+            $("#filterCompleted").addClass('active');
+
+        }
+
+        fetch(uri + `/Filter/${filterOption}`)
+            .then(response => response.json())
+            .then(data => displayItems(data))
+            .catch(error => console.error('Unable to get items.', error));
+
+    } else {
+
+        fetch(uri1)
+            .then(response => response.json())
+            .then(data => displayItems(data))
+            .catch(error => console.error('Unable to get items.', error));
+
+    }
 }
 
 //POST TASK
