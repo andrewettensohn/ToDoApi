@@ -9,27 +9,52 @@ function getItems(filterOption, filterElement) {
 
     if (typeof filterOption !== "undefined") {
 
-            if ($(`#${filterElement}`).hasClass('active')) {
+        if ($(`#${filterElement}`).hasClass('active')) {
 
-                $(`#${filterElement}`).removeClass('active');
-                getItems()
-                return;
+            $("#i-filter").css({ fill: "" })
 
-            } else {
+            $(`#${filterElement}`).removeClass('active');
 
-                $(`#${filterElement}`).addClass('active');
+            var arrayFilterElements = ["filterNotStarted", "filterInProgress", "filterCompleted"];
+
+            arrayFilterElements.forEach(element => {
+
+                if (element != filterElement) {
+
+                    $(`#${element}`).removeClass('disabled')
+
+                }
+
+            });
+
+            getItems()
+            return;
+
+        } else {
+
+            $("#i-filter").css({ fill: "#ffffff" })
+
+            $(`#${filterElement}`).addClass('active');
+
+            var arrayFilterElements = ["filterNotStarted", "filterInProgress", "filterCompleted"];
+
+            arrayFilterElements.forEach(element => {
+
+                if (element != filterElement) {
+
+                    $(`#${element}`).addClass('disabled')
+
+                }
+            });
 
         }
 
         $('#loadingAnimationArea').toggleClass('d-none');
 
-
         fetch(uri + `/Filter/${filterOption}`)
             .then(response => response.json())
             .then(data => displayItems(data))
             .catch(error => console.error('Unable to get items.', error));
-
-        $('#loadingAnimationArea').toggleClass('d-none');
 
     } else {
 
@@ -39,8 +64,6 @@ function getItems(filterOption, filterElement) {
             .then(response => response.json())
             .then(data => displayItems(data))
             .catch(error => console.error('Unable to get items.', error));
-
-        $('#loadingAnimationArea').toggleClass('d-none');
 
     }
 }
@@ -411,7 +434,7 @@ function displayItems(data) {
 
         }
     });
-
+    $('#loadingAnimationArea').toggleClass('d-none');
 }
 
 //CREATE SUB-TASK HTML
@@ -510,14 +533,4 @@ function displaySubItems(item) {
         document.getElementById(`taskCollapse${item.todoItemID}`).appendChild(newDiv);
 
     }
-}
-
-
-function loadingAnimation() {
-
-    console.log('hello world')
-
-    $('#loadingAnimationArea').toggleClass('d-none');
-
-
 }
