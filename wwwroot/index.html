@@ -24,15 +24,10 @@
                     </svg>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" id="filterNotStarted" onclick="getItems('Not Started', 'filterNotStarted')">Not Started</a>
-                    <a class="dropdown-item" id="filterInProgress" onclick="getItems('In-Progress', 'filterInProgress')">In-Progress</a>
-                    <a class="dropdown-item" id="filterCompleted" onclick="getItems('Completed', 'filterCompleted')">Completed</a>
+                    <a class="dropdown-item" href="#" id="filterNotStarted" onclick="getItems('Not Started', 'filterNotStarted')">Not Started</a>
+                    <a class="dropdown-item" href="#" id="filterInProgress" onclick="getItems('In-Progress', 'filterInProgress')">In-Progress</a>
+                    <a class="dropdown-item" href="#" id="filterCompleted" onclick="getItems('Completed', 'filterCompleted')">Completed</a>
                 </div>
-                <button class="btn mr-2">
-                    <svg id="i-options" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                        <path d="M28 6 L4 6 M28 16 L4 16 M28 26 L4 26 M24 3 L24 9 M8 13 L8 19 M20 23 L20 29" />
-                    </svg>
-                </button>
                 <button class="btn btn-success" data-toggle="collapse"
                         href="#multiCollapseCreateNewTask" role="button"
                         aria-expanded="false" aria-controls="multiCollapseCreateNewTask">
@@ -63,7 +58,7 @@
                 <br />
 
 
-                <div id="loadingAnimationArea">
+                <div id="loadingAnimationArea" class="d-none">
                     <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -84,7 +79,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="js/site.js" asp-append-version="true"></script>
 <script type="text/javascript">
-    loadingAnimation();
     getItems();
     
 
