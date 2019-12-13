@@ -481,3 +481,15 @@ function displaySubItems(item) {
 
     }
 }
+
+//404
+//Modal with loading animation
+//500
+//Reload
+
+function loadingAnimation() {
+
+    $('#loadingAnimationArea').toggleClass('d-none');
+
+
+}
