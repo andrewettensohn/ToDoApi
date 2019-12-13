@@ -3,55 +3,26 @@ const uri1 = 'api/TodoItems/Tasks';
 const uri2 = 'api/TodoSubItems';
 
 //GET ALL
-function getItems(filterOption) {
+function getItems(filterOption, filterElement) {
 
     $("#output").empty();
 
     if (typeof filterOption !== "undefined") {
 
-        if (filterOption == "Not Started") {
+            if ($(`#${filterElement}`).hasClass('active')) {
 
-            if ($("#filterNotStarted").hasClass('active')) {
-
-                $("#filterNotStarted").removeClass('active');
+                $(`#${filterElement}`).removeClass('active');
                 getItems()
                 return;
 
             } else {
 
-                $("#filterNotStarted").addClass('active');
-
-            }
-            
-        } else if (filterOption == "In-Progress") {
-
-            if ($("#filterInProgress").hasClass('active')) {
-
-                $("#filterInProgress").removeClass('active');
-                getItems()
-                return;
-
-            } else {
-
-                $("#filterInProgress").addClass('active');
-
-            }
-
-        } else if (filterOption == "Completed") {
-
-            if ($("#filterCompleted").hasClass('active')) {
-
-                $("#filterCompleted").removeClass('active');
-                getItems()
-                return;
-
-            } else {
-
-                $("#filterCompleted").addClass('active');
-
-            }
+                $(`#${filterElement}`).addClass('active');
 
         }
+
+        $('#loadingAnimationArea').toggleClass('d-none');
+
 
         fetch(uri + `/Filter/${filterOption}`)
             .then(response => response.json())
@@ -61,6 +32,8 @@ function getItems(filterOption) {
         $('#loadingAnimationArea').toggleClass('d-none');
 
     } else {
+
+        $('#loadingAnimationArea').toggleClass('d-none');
 
         fetch(uri1)
             .then(response => response.json())
@@ -539,12 +512,10 @@ function displaySubItems(item) {
     }
 }
 
-//404
-//Modal with loading animation
-//500
-//Reload
 
 function loadingAnimation() {
+
+    console.log('hello world')
 
     $('#loadingAnimationArea').toggleClass('d-none');
 
