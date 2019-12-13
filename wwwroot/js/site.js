@@ -58,12 +58,16 @@ function getItems(filterOption) {
             .then(data => displayItems(data))
             .catch(error => console.error('Unable to get items.', error));
 
+        $('#loadingAnimationArea').toggleClass('d-none');
+
     } else {
 
         fetch(uri1)
             .then(response => response.json())
             .then(data => displayItems(data))
             .catch(error => console.error('Unable to get items.', error));
+
+        $('#loadingAnimationArea').toggleClass('d-none');
 
     }
 }
