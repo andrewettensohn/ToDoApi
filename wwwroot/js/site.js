@@ -378,7 +378,7 @@ function displayItems(data) {
         var taskHTML = `
 
             <div id="taskAccordion${item.todoItemID}">
-                    <div id="taskCard${item.todoItemID}" class="card bg-dark">
+                    <div id="taskCard${item.todoItemID}" class="card bg-dark rounded-0">
                         <div>
                             <svg class="float-left my-1" onclick="addSubItem(${item.todoItemID})" touchstart="addSubItem(${item.todoItemID})"  id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                 <path d="M16 2 L16 30 M2 16 L30 16" />
@@ -390,7 +390,7 @@ function displayItems(data) {
                                 <path d="M2 30 L30 2 M30 30 L2 2" />
                             </svg>
                         </div>
-                        <div class="card-header" id="taskHeading${item.todoItemID}">
+                        <div class="card-header bg-dark" id="taskHeading${item.todoItemID}">
                             <img id="statusIcon${item.todoItemID}" class="float-left" height="80" width="8" src="lib/statusIcons/${item.taskStatus}.png" />
                             <div class="mb-0 float-left" id="divTaskName${item.todoItemID}">
                                 <h5 onclick="displayTaskInput('${item.todoItemID}', 'N/A', false)" class="mx-2 mt-1" id="taskNameHeader${item.todoItemID}">${item.taskName}</h5>
@@ -479,8 +479,8 @@ function displaySubItems(item) {
         var subTaskHTML = `
 
             <div id="subAccordion${subItem.todoSubItemID}">
-            <div class="card bg-dark">
-                <div>
+            <div class="card bg-dark rounded-0">
+                <div class="bg-dark">
                 <svg class="float-left my-1" onclick="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" touchstart="addSubTaskDescription('${item.todoItemID}', '${subItem.todoSubItemID}')" id="i-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="15" height="20" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M16 2 L16 30 M2 16 L30 16" />
                 </svg>
@@ -491,7 +491,7 @@ function displaySubItems(item) {
                     <path d="M2 30 L30 2 M30 30 L2 2" />
                 </svg>
             </div>
-                <div class="card-header" id="subHeading${subItem.todoSubItemID}">
+                <div class="card-header bg-dark border-0" id="subHeading${subItem.todoSubItemID}">
                     <img id="subStatusIcon${subItem.todoSubItemID}" class="float-left" height="40" width="8" src="lib/statusIcons/${subItem.subTaskStatus}.png" />
                     <div class="mb-0 float-left" id="divTaskName${subItem.todoSubItemID}">
                         <p onclick="displayTaskInput('${item.todoItemID}', '${subItem.todoSubItemID}', true)" class="font-weight-light mx-2 mt-1" id="subTaskNameHeader${subItem.todoSubItemID}">${subItem.subTaskName}</p>
@@ -518,7 +518,7 @@ function displaySubItems(item) {
                     </div>
                 </div>
                 <div id="subCollapse${subItem.todoSubItemID}" class="collapse bg-dark" data-parent="#subAccordion${subItem.todoSubItemID}">
-                    <br />
+                    <hr />
                     <div class="form-group">
                         <textarea id="subAreaTaskDescription${subItem.todoSubItemID}" class="bg-dark text-white form-control border-0" onfocusout="changeSubTaskDescription('${item.todoItemID}','${subItem.todoSubItemID}')">${subItem.subTaskDescription}</textarea>
                     </div class=form-group>
