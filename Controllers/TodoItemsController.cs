@@ -45,11 +45,24 @@ namespace ToDoApi.Controllers
         [HttpGet("Tasks")]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItemAndSubItems()
         {
-            var todoItems = await _context.TodoItems.ToListAsync();
+            var todoItems = new List<TodoItem>();
 
-            await _context.TodoSubItems.ToListAsync();
+            while(todoItems.Count() <=  0)
+            {
+
+                todoItems = await _context.TodoItems.ToListAsync();
+
+                await _context.TodoSubItems.ToListAsync();
+
+                if(todoItems.Count() <= 0)
+                {
+                    System.Threading.Thread.Sleep(10000); 
+                }
+
+            }
 
             return todoItems;
+
         }
 
         // GET: api/TodoItems/Filter/Not Started
@@ -57,6 +70,8 @@ namespace ToDoApi.Controllers
         public async Task<ActionResult<List<TodoItem>>> GetTodoItemsInProgress(string filterStatus)
         {
             var todoItems = await _context.TodoItems.ToListAsync();
+
+            await _context.TodoSubItems.ToListAsync();
 
             var todoItemsInProgress = new List<TodoItem>();
 
